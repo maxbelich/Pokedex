@@ -13,14 +13,18 @@ function getMainTemplate() {
 
 function getPokemonCardTemplate(pokemonIndex) {
   return /*html*/ `
-    <div class="pokemon_card">
+    <button 
+      class="pokemon_card" 
+      type="button" 
+      aria-label="Open details for ${pokemonDetails[pokemonIndex].name}"
+    >
       <span>#${pokemonDetails[pokemonIndex].id}</span>
       <h2>${pokemonDetails[pokemonIndex].name}</h2>
       <img src="${pokemonDetails[pokemonIndex].sprites.front_default}" alt="${pokemonDetails[pokemonIndex].name}">
       <div class="pokemon_types">
         ${getPokemonTypesTemplate(pokemonIndex)}
       </div>
-    </div>
+    </button>
   `;
 }
 
