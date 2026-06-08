@@ -25,13 +25,10 @@ function renderPokemonCards() {
 }
 
 async function loadPokemonDetails() {
-  pokemonDetails = [];
+  const pokemonDetailPromises = allPokemon.map((pokemon) => {
+    return fetchPokemonDetails(pokemon.url);
+  });
 
-  for (let pokemonIndex = 0; pokemonIndex < allPokemon.length; pokemonIndex++) {
-    let pokemon = await fetchPokemonDetails(allPokemon[pokemonIndex].url);
-    pokemonDetails.push(pokemon);
-  }
-
-  console.log(pokemonDetails);
+  pokemonDetails = await Promise.all(pokemonDetailPromises);
 }
 
