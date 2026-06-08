@@ -1,5 +1,6 @@
 body{
     background-color: black;
+    font-family: "Poppins", sans-serif;
 }
 
 .hero{
@@ -17,8 +18,8 @@ body{
 }
 
 .pokemon_card {
-  width: 180px;
-  min-height: 180px;
+  width: 220px;
+  min-height: 150px;
   padding: 16px;
   border: unset;
   border-radius: 16px;
@@ -28,7 +29,6 @@ body{
   font-family: inherit;
   color: inherit;
   text-align: left;
-
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -44,10 +44,11 @@ body{
 }
 
 .pokemon_card img {
-  width: 96px;
-  height: 96px;
+  width: 104px;
+  height: 104px;
   object-fit: contain;
   align-self: center;
+  filter: drop-shadow(0 10px 8px rgba(0, 0, 0, 0.38));
 }
 
 .pokemon_card h2 {
@@ -138,4 +139,221 @@ body{
   100% {
     opacity: 0;
   }
+}
+
+.no_scroll {
+  overflow: hidden;
+}
+
+.pokemon_dialog {
+  width: 420px;
+  max-width: calc(100vw - 32px);
+  height: calc(100vh - 150px);
+  margin: 60px 24px 60px auto;
+  padding: 0;
+  border: unset;
+  border-radius: 20px;
+  background-color: transparent;
+  overflow: hidden;
+
+  transform: translateX(120%);
+  animation: slideDialogIn 250ms ease-out forwards;
+}
+
+.pokemon_dialog::backdrop {
+  background-color: rgba(0, 0, 0, 0.65);
+}
+
+.pokemon_dialog_card {
+  width: 100%;
+  height: 100%;
+  background-color: white;
+  overflow-y: auto;
+
+  display: flex;
+  flex-direction: column;
+}
+
+.pokemon_dialog_card h2 {
+  font-size: 1.5rem;
+  text-transform: capitalize;
+}
+
+.dialog_close_btn {
+  width: 40px;
+  height: 40px;
+  border: unset;
+  border-radius: 999px;
+  background-color: #eeeeee;
+  font-size: 1.5rem;
+  cursor: pointer;
+  align-self: flex-end;
+}
+
+@keyframes slideDialogIn {
+  from {
+    transform: translateX(120%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
+.pokemon_dialog_header {
+  min-height: 300px;
+  padding: 24px;
+  position: relative;
+  overflow: visible;
+}
+
+.pokemon_dialog_header::before {
+  content: "";
+  width: 240px;
+  height: 240px;
+  background-image: url("../assets/imgs/pokeball_bg.svg");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  opacity: 0.14;
+
+  position: absolute;
+  right: -30px;
+  top: 70px;
+  z-index: 1;
+}
+
+.pokemon_dialog_topline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  color: white;
+  position: relative;
+  z-index: 2;
+}
+
+.pokemon_dialog_topline h2 {
+  font-size: 1.5rem;
+  text-transform: capitalize;
+  margin-right: auto;
+}
+
+.pokemon_dialog_topline span {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.dialog_back_btn {
+  width: 40px;
+  height: 40px;
+  border: unset;
+  border-radius: 999px;
+  background-color: transparent;
+  color: white;
+  font-size: 1.5rem;
+  cursor: pointer;
+}
+
+.dialog_pokemon_img {
+  width: 280px;
+  height: 280px;
+  object-fit: contain;
+
+  position: absolute;
+  left: 50%;
+  bottom: -56px;
+  transform: translateX(-50%);
+  z-index: 5;
+
+  filter: drop-shadow(0 18px 18px rgba(0, 0, 0, 0.45));
+}
+
+.pokemon_dialog_body {
+  padding: 72px 24px 24px;
+  border-radius: 28px 28px 0 0;
+  background-color: white;
+  position: relative;
+  z-index: 2;
+
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.dialog_types {
+  justify-content: center;
+}
+
+.dialog_tabs {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+
+.dialog_tab {
+  border: unset;
+  background-color: transparent;
+  cursor: pointer;
+  font-size: 1rem;
+  font-weight: 700;
+  padding: 8px 0;
+  color: #777777;
+}
+
+.dialog_tab.active {
+  color: #222222;
+  border-bottom: 3px solid currentColor;
+}
+
+.dialog_tab_content {
+  font-size: 1rem;
+
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pokemon_about_infos {
+  display: flex;
+  justify-content: center;
+  gap: 24px;
+}
+
+.pokemon_about_item {
+  width: 100px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  text-align: center;
+}
+
+.pokemon_about_item img {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+}
+
+.pokemon_about_item span {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.pokemon_about_item small {
+  font-size: 1rem;
+  color: #777777;
+}
+
+.pokemon_abilities_list {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.pokemon_abilities_list span {
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.2;
 }
