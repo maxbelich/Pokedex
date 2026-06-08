@@ -1,1 +1,2 @@
 let allPokemon = [];
+let pokemonDetails = [];
