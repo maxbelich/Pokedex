@@ -1,3 +1,11 @@
+body{
+    background-color: black;
+}
+
+.hero{
+    color: white;
+}
+
 .pokemon_content {
   padding: 32px;
 }
@@ -46,4 +54,74 @@
   background-color: #dddddd;
   font-size: 1rem;
   text-transform: capitalize;
+}
+
+#pokemon_cards:has(.loading_state) {
+  min-height: calc(100vh - 220px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.loading_state {
+  width: 100%;
+  padding: 32px;
+  font-size: 2.75rem;
+  text-align: center;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 16px;
+}
+
+.loading_pokeball {
+  width: 240px;
+  height: 240px;
+  animation: spinPokeball 1s linear infinite;
+}
+
+@keyframes spinPokeball {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loading_dot {
+  opacity: 0;
+  animation: blinkLoadingDot 1.5s infinite;
+}
+
+.loading_dot:nth-of-type(1) {
+  animation-delay: 0s;
+}
+
+.loading_dot:nth-of-type(2) {
+  animation-delay: 0.3s;
+}
+
+.loading_dot:nth-of-type(3) {
+  animation-delay: 0.6s;
+}
+
+@keyframes blinkLoadingDot {
+  0% {
+    opacity: 0;
+  }
+
+  20% {
+    opacity: 1;
+  }
+
+  60% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
 }

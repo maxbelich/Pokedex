@@ -44,3 +44,17 @@ function getPokemonTypesTemplate(pokemonIndex) {
 
   return typesTemplate;
 }
+
+function getLoadingTemplate() {
+  return /*html*/ `
+    <div class="loading_state">
+      <img class="loading_pokeball" src="./assets/imgs/pokeball_bg.svg" alt="Loading Pokéball">
+      <p class="loading_text">
+        Loading Pokemon
+        <span class="loading_dot">.</span>
+        <span class="loading_dot">.</span>
+        <span class="loading_dot">.</span>
+      </p>
+    </div>
+  `;
+}
