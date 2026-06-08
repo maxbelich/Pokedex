@@ -1,5 +1,6 @@
 async function init() {
   renderMain();
+  renderLoadingState();
 
   let pokemonList = await fetchPokemonList();
   allPokemon = pokemonList.results;
@@ -32,3 +33,8 @@ async function loadPokemonDetails() {
   pokemonDetails = await Promise.all(pokemonDetailPromises);
 }
 
+function renderLoadingState() {
+  const pokemonCardsRef = document.getElementById("pokemon_cards");
+
+  pokemonCardsRef.innerHTML = getLoadingTemplate();
+}
