@@ -14,7 +14,9 @@ function getMainTemplate() {
 function getPokemonCardTemplate(pokemonIndex) {
   return /*html*/ `
     <div class="pokemon_card">
-      <h2>${allPokemon[pokemonIndex].name}</h2>
+      <span>#${pokemonDetails[pokemonIndex].id}</span>
+      <h2>${pokemonDetails[pokemonIndex].name}</h2>
+      <img src="${pokemonDetails[pokemonIndex].sprites.front_default}" alt="${pokemonDetails[pokemonIndex].name}">
     </div>
   `;
 }
