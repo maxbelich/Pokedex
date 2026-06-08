@@ -38,3 +38,29 @@ function renderLoadingState() {
 
   pokemonCardsRef.innerHTML = getLoadingTemplate();
 }
+
+function openPokemonDialog(pokemonIndex) {
+  const dialogRef = document.getElementById("pokemon_dialog");
+
+  document.body.classList.add("no_scroll");
+  dialogRef.innerHTML = getPokemonDialogTemplate(pokemonIndex);
+  dialogRef.showModal();
+
+  dialogRef.addEventListener("click", closeDialogOnBackdropClick);
+}
+
+function closePokemonDialog() {
+  const dialogRef = document.getElementById("pokemon_dialog");
+
+  document.body.classList.remove("no_scroll");
+  dialogRef.removeEventListener("click", closeDialogOnBackdropClick);
+  dialogRef.close();
+}
+
+function closeDialogOnBackdropClick(event) {
+  const dialogRef = document.getElementById("pokemon_dialog");
+
+  if (event.target === dialogRef) {
+    closePokemonDialog();
+  }
+}
