@@ -10,14 +10,40 @@
 
 .pokemon_card {
   width: 180px;
-  min-height: 120px;
+  min-height: 180px;
   padding: 16px;
   border-radius: 16px;
   background-color: #f2f2f2;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.pokemon_card img {
+  width: 96px;
+  height: 96px;
+  object-fit: contain;
+  align-self: center;
 }
 
 .pokemon_card h2 {
   font-size: 20px;
+  text-transform: capitalize;
+}
+
+.pokemon_types {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  flex-wrap: wrap;
+}
+
+.pokemon_type {
+  padding: 4px 10px;
+  border-radius: 999px;
+  background-color: #dddddd;
+  font-size: 14px;
   text-transform: capitalize;
 }
