@@ -97,33 +97,38 @@ function getPokemonDialogTemplate(pokemonIndex) {
         </div>
 
         <div class="dialog_tabs">
-          <button class="dialog_tab active" type="button">About</button>
-          <button class="dialog_tab" type="button">Stats</button>
-          <button class="dialog_tab" type="button">Evolution</button>
-        </div>
+  <button 
+    class="dialog_tab active" 
+    id="dialog_tab_about"
+    type="button" 
+    onclick="renderDialogTab(${pokemonIndex}, 'about')"
+  >
+    About
+  </button>
 
-        <div class="dialog_tab_content">
-<div class="pokemon_about_infos">
-  <div class="pokemon_about_item">
-    <img src="./assets/icons/height.svg" alt="">
-    <span>${pokemon.height / 10} m</span>
-    <small>Height</small>
-  </div>
+  <button 
+    class="dialog_tab" 
+    id="dialog_tab_stats"
+    type="button" 
+    onclick="renderDialogTab(${pokemonIndex}, 'stats')"
+  >
+    Stats
+  </button>
 
-  <div class="pokemon_about_item">
-    <img src="./assets/icons/weight.svg" alt="">
-    <span>${pokemon.weight / 10} kg</span>
-    <small>Weight</small>
-  </div>
-
-  <div class="pokemon_about_item">
-    <img src="./assets/icons/ability.png" alt="">
-    <div class="pokemon_abilities_list">
-      ${getPokemonAbilitiesTemplate(pokemon)}
-    </div>
-    <small>Abilities</small>
-  </div>
+  <button 
+    class="dialog_tab" 
+    id="dialog_tab_evolution"
+    type="button" 
+    onclick="renderDialogTab(${pokemonIndex}, 'evolution')"
+  >
+    Evolution
+  </button>
 </div>
+
+<div class="dialog_tab_content" id="dialog_tab_content">
+  ${getDialogAboutTemplate(pokemonIndex)}
+</div>
+
   `;
 }
 
@@ -146,4 +151,89 @@ function getPokemonAbilitiesTemplate(pokemon) {
   }
 
   return abilitiesTemplate;
+}
+
+function getDialogAboutTemplate(pokemonIndex) {
+  let pokemon = pokemonDetails[pokemonIndex];
+
+  return /*html*/ `
+    <div class="pokemon_about_infos">
+      <div class="pokemon_about_item">
+        <img src="./assets/icons/height.svg" alt="">
+        <span>${pokemon.height / 10} m</span>
+        <small>Height</small>
+      </div>
+
+      <div class="pokemon_about_item">
+        <img src="./assets/icons/weight.svg" alt="">
+        <span>${pokemon.weight / 10} kg</span>
+        <small>Weight</small>
+      </div>
+
+      <div class="pokemon_about_item">
+        <img src="./assets/icons/ability.png" alt="">
+        <div class="pokemon_abilities_list">
+          ${getPokemonAbilitiesTemplate(pokemon)}
+        </div>
+        <small>Abilities</small>
+      </div>
+    </div>
+  `;
+}
+
+function getDialogStatsTemplate(pokemonIndex) {
+  let pokemon = pokemonDetails[pokemonIndex];
+  let mainType = pokemon.types[0].type.name;
+  let mainColor = typeColors[mainType] || "#777";
+  let statsTemplate = "";
+
+  for (let statIndex = 0; statIndex < pokemon.stats.length; statIndex++) {
+    let statName = formatPokemonStatName(pokemon.stats[statIndex].stat.name);
+    let statValue = pokemon.stats[statIndex].base_stat;
+    let statBarWidth = Math.min(statValue, 100);
+
+    statsTemplate += /*html*/ `
+      <div class="pokemon_stat_row">
+        <span class="pokemon_stat_name">${statName}</span>
+        <span class="pokemon_stat_value">${statValue}</span>
+
+        <div class="pokemon_stat_bar">
+          <div 
+            class="pokemon_stat_bar_fill" 
+            style="width: ${statBarWidth}%; background-color: ${mainColor};"
+          ></div>
+        </div>
+      </div>
+    `;
+  }
+
+  return /*html*/ `
+    <div class="pokemon_stats">
+      ${statsTemplate}
+    </div>
+  `;
+}
+
+function formatPokemonStatName(statName) {
+  if (statName === "hp") {
+    return "HP";
+  }
+
+  if (statName === "special-attack") {
+    return "Sp. Atk";
+  }
+
+  if (statName === "special-defense") {
+    return "Sp. Def";
+  }
+
+  return formatPokemonText(statName);
+}
+
+function getDialogEvolutionTemplate() {
+  return /*html*/ `
+    <div class="pokemon_evolution_placeholder">
+      <p>Evolution data coming soon.</p>
+    </div>
+  `;
 }

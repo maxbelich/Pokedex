@@ -64,3 +64,43 @@ function closeDialogOnBackdropClick(event) {
     closePokemonDialog();
   }
 }
+
+function renderDialogTab(pokemonIndex, tabName) {
+  const tabContentRef = document.getElementById("dialog_tab_content");
+
+  if (tabName === "about") {
+    tabContentRef.innerHTML = getDialogAboutTemplate(pokemonIndex);
+  }
+
+  if (tabName === "stats") {
+    tabContentRef.innerHTML = getDialogStatsTemplate(pokemonIndex);
+  }
+}
+
+function renderDialogTab(pokemonIndex, tabName) {
+  const tabContentRef = document.getElementById("dialog_tab_content");
+
+  updateActiveDialogTab(tabName);
+
+  if (tabName === "about") {
+    tabContentRef.innerHTML = getDialogAboutTemplate(pokemonIndex);
+  }
+
+  if (tabName === "stats") {
+    tabContentRef.innerHTML = getDialogStatsTemplate(pokemonIndex);
+  }
+
+  if (tabName === "evolution") {
+    tabContentRef.innerHTML = getDialogEvolutionTemplate();
+  }
+}
+
+function updateActiveDialogTab(activeTabName) {
+  document.querySelectorAll(".dialog_tab").forEach((tab) => {
+    tab.classList.remove("active");
+  });
+
+  document
+    .getElementById(`dialog_tab_${activeTabName}`)
+    .classList.add("active");
+}

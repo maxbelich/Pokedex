@@ -148,7 +148,7 @@ body{
 .pokemon_dialog {
   width: 420px;
   max-width: calc(100vw - 32px);
-  height: calc(100vh - 150px);
+  height: calc(100vh - 350px);
   margin: 60px 24px 60px auto;
   padding: 0;
   border: unset;
@@ -169,6 +169,7 @@ body{
   height: 100%;
   background-color: white;
   overflow-y: auto;
+  overflow-x: hidden;
 
   display: flex;
   flex-direction: column;
@@ -356,4 +357,48 @@ body{
   font-size: 1rem;
   font-weight: 700;
   line-height: 1.2;
+}
+
+.pokemon_stats {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.pokemon_stat_row {
+  display: grid;
+  grid-template-columns: 80px 36px 1fr;
+  align-items: center;
+  gap: 12px;
+}
+
+.pokemon_stat_name {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #555555;
+}
+
+.pokemon_stat_value {
+  font-size: 1rem;
+  font-weight: 700;
+  text-align: right;
+}
+
+.pokemon_stat_bar {
+  height: 10px;
+  border-radius: 999px;
+  background-color: #eeeeee;
+  overflow: hidden;
+}
+
+.pokemon_stat_bar_fill {
+  height: 100%;
+  border-radius: 999px;
+  background-color: #74cb48;
+}
+
+.pokemon_evolution_placeholder {
+  font-size: 1rem;
+  text-align: center;
+  color: #777777;
 }
