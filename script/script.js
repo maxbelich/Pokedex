@@ -154,3 +154,41 @@ function showNextPokemon() {
 
   openPokemonDialog(nextPokemonIndex);
 }
+
+async function loadMorePokemon() {
+  currentOffset += POKEMON_LIMIT;
+
+  renderLoadMoreButtonLoading();
+
+  let pokemonList = await fetchPokemonList();
+  let newPokemon = pokemonList.results;
+  let newPokemonDetails = await loadNewPokemonDetails(newPokemon);
+
+  allPokemon = allPokemon.concat(newPokemon);
+  pokemonDetails = pokemonDetails.concat(newPokemonDetails);
+
+  renderPokemonCards();
+  renderLoadMoreButtonDefault();
+}
+
+async function loadNewPokemonDetails(newPokemon) {
+  const pokemonDetailPromises = newPokemon.map((pokemon) => {
+    return fetchPokemonDetails(pokemon.url);
+  });
+
+  return await Promise.all(pokemonDetailPromises);
+}
+
+function renderLoadMoreButtonLoading() {
+  const loadMoreButtonRef = document.getElementById("load_more_btn");
+
+  loadMoreButtonRef.disabled = true;
+  loadMoreButtonRef.innerText = "Loading...";
+}
+
+function renderLoadMoreButtonDefault() {
+  const loadMoreButtonRef = document.getElementById("load_more_btn");
+
+  loadMoreButtonRef.disabled = false;
+  loadMoreButtonRef.innerText = "Load More";
+}
