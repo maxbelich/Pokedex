@@ -1,45 +1,58 @@
 function getMainTemplate() {
   return /*html*/ `
-<section class="hero">
-  <div class="hero_content">
-    <div class="hero_text">
-      <h1>Pokédex</h1>
-      <p>Search and explore Pokémon</p>
-    </div>
+    <header class="page_header">
+      <div class="page_container">
+        <div class="hero">
+          <div class="hero_text">
+            <h1>Pokédex</h1>
+            <p>Search and explore Pokémon</p>
+          </div>
 
-    <div class="pokemon_search_wrapper">
-      <input
-        class="pokemon_search_input"
-        id="pokemon_search_input"
-        type="search"
-        placeholder="Name/ID"
-        aria-label="Search Pokémon by name or ID"
-        oninput="handlePokemonSearch()"
-      >
+          <div class="pokemon_search_wrapper">
+            <input
+              class="pokemon_search_input"
+              id="pokemon_search_input"
+              type="search"
+              placeholder="Name/ID"
+              aria-label="Search Pokémon by name or ID"
+              oninput="handlePokemonSearch()"
+            >
 
-      <p class="pokemon_search_error invisible" id="pokemon_search_error">
-  Min 3. characters required
-</p>
-    </div>
-  </div>
-</section>
+            <p class="pokemon_search_error invisible" id="pokemon_search_error">
+              Min 3. characters required
+            </p>
+          </div>
+        </div>
+      </div>
+    </header>
 
-<section class="pokemon_content">
-  <div id="pokemon_cards"></div>
+    <main class="page_main">
+      <div class="page_container">
+        <section class="pokemon_content">
+          <div id="pokemon_cards"></div>
 
-  <button 
-    class="load_more_btn" 
-    id="load_more_btn"
-    type="button"
-    onclick="loadMorePokemon()"
-  >
-    Load More
-  </button>
-  
-  <p class="load_more_error invisible" id="load_more_error">
-  More Pokémon could not be loaded. Please try again.
-</p>
-</section>
+          <button 
+            class="load_more_btn" 
+            id="load_more_btn"
+            type="button"
+            onclick="loadMorePokemon()"
+          >
+            Load More
+          </button>
+
+          <p class="load_more_error invisible" id="load_more_error">
+            More Pokémon could not be loaded. Please try again.
+          </p>
+        </section>
+      </div>
+    </main>
+
+    <footer class="page_footer">
+      <div class="page_container page_footer_content">
+        <p>Pokédex</p>
+        <p>Data from PokéAPI</p>
+      </div>
+    </footer>
 
     <dialog id="pokemon_dialog" class="pokemon_dialog"></dialog>
   `;
