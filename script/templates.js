@@ -1,9 +1,28 @@
 function getMainTemplate() {
   return /*html*/ `
-    <section class="hero">
+<section class="hero">
+  <div class="hero_content">
+    <div class="hero_text">
       <h1>Pokédex</h1>
       <p>Search and explore Pokémon</p>
-    </section>
+    </div>
+
+    <div class="pokemon_search_wrapper">
+      <input
+        class="pokemon_search_input"
+        id="pokemon_search_input"
+        type="search"
+        placeholder="Name/ID"
+        aria-label="Search Pokémon by name or ID"
+        oninput="handlePokemonSearch()"
+      >
+
+      <p class="pokemon_search_error invisible" id="pokemon_search_error">
+  Min 3. characters required
+</p>
+    </div>
+  </div>
+</section>
 
 <section class="pokemon_content">
   <div id="pokemon_cards"></div>
@@ -30,7 +49,7 @@ function getPokemonCardTemplate(pokemonIndex) {
       onclick="openPokemonDialog(${pokemonIndex})"
       aria-label="Open details for ${pokemonDetails[pokemonIndex].name}"
     >
-      <span>#${pokemonDetails[pokemonIndex].id}</span>
+      <span>#${formatPokemonId(pokemonDetails[pokemonIndex].id)}</span>
       <h2>${pokemonDetails[pokemonIndex].name}</h2>
       <img src="${pokemonDetails[pokemonIndex].sprites.front_default}" alt="${pokemonDetails[pokemonIndex].name}">
       <div class="pokemon_types">
@@ -108,7 +127,7 @@ function getPokemonDialogTemplate(pokemonIndex) {
 
           <h2>${pokemon.name}</h2>
 
-          <span>#${String(pokemon.id).padStart(3, "0")}</span>
+          <span>#${formatPokemonId(pokemon.id)}</span>
         </div>
 
         <img 
@@ -290,6 +309,14 @@ function getDialogTabLoadingTemplate() {
   return /*html*/ `
     <div class="dialog_tab_loading">
       <p>Loading Evolution...</p>
+    </div>
+  `;
+}
+
+function getNoPokemonFoundTemplate() {
+  return /*html*/ `
+    <div class="no_pokemon_found">
+      <p>No Pokémon found.</p>
     </div>
   `;
 }
