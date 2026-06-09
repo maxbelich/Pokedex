@@ -541,3 +541,25 @@ body{
 .invisible {
   visibility: hidden;
 }
+
+.error_state {
+  width: 100%;
+  padding: 32px;
+  color: #ef5350;
+  font-size: 1rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+.d_none {
+  display: none;
+}
+
+.load_more_error {
+  min-height: 24px;
+  margin: 12px 0 0;
+  color: #ef5350;
+  font-size: 1rem;
+  font-weight: 700;
+  text-align: center;
+}

@@ -35,6 +35,10 @@ function getMainTemplate() {
   >
     Load More
   </button>
+  
+  <p class="load_more_error invisible" id="load_more_error">
+  More Pokémon could not be loaded. Please try again.
+</p>
 </section>
 
     <dialog id="pokemon_dialog" class="pokemon_dialog"></dialog>
@@ -317,6 +321,14 @@ function getNoPokemonFoundTemplate() {
   return /*html*/ `
     <div class="no_pokemon_found">
       <p>No Pokémon found.</p>
+    </div>
+  `;
+}
+
+function getErrorTemplate(message) {
+  return /*html*/ `
+    <div class="error_state">
+      <p>${message}</p>
     </div>
   `;
 }
