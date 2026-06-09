@@ -430,3 +430,32 @@ body{
   font-size: 1rem;
   font-weight: 700;
 }
+
+.dialog_nav_btn {
+  position: absolute;
+  top: 50%;
+  z-index: 10;
+  border: none;
+  background: transparent;
+  color: #222;
+  font-size: 2.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  transform: translateY(-50%);
+  padding: 8px 12px;
+  line-height: 1;
+  transition: transform 125ms ease, opacity 125ms ease;
+}
+
+.dialog_nav_btn:hover {
+  transform: translateY(-50%) scale(1.08);
+  opacity: 0.7;
+}
+
+.dialog_nav_btn_prev {
+  left: 16px;
+}
+
+.dialog_nav_btn_next {
+  right: 16px;
+}
