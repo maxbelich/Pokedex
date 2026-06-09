@@ -72,6 +72,24 @@ function getPokemonDialogTemplate(pokemonIndex) {
   let mainColor = typeColors[mainType] || "#777";
 
   return /*html*/ `
+    <button 
+      class="dialog_nav_btn dialog_nav_btn_prev" 
+      type="button" 
+      onclick="showPreviousPokemon()"
+      aria-label="Show previous Pokemon"
+    >
+      <
+    </button>
+
+    <button 
+      class="dialog_nav_btn dialog_nav_btn_next" 
+      type="button" 
+      onclick="showNextPokemon()"
+      aria-label="Show next Pokemon"
+    >
+      >
+    </button>
+
     <div class="pokemon_dialog_card">
       <div class="pokemon_dialog_header" style="background-color: ${mainColor}">
         <div class="pokemon_dialog_topline">
@@ -125,10 +143,11 @@ function getPokemonDialogTemplate(pokemonIndex) {
   </button>
 </div>
 
-<div class="dialog_tab_content" id="dialog_tab_content">
-  ${getDialogAboutTemplate(pokemonIndex)}
-</div>
-
+        <div class="dialog_tab_content" id="dialog_tab_content">
+          ${getDialogAboutTemplate(pokemonIndex)}
+        </div>
+      </div>
+    </div>
   `;
 }
 

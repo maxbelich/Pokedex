@@ -1,3 +1,5 @@
+let currentPokemonIndex = 0;
+
 async function init() {
   renderMain();
   renderLoadingState();
@@ -42,10 +44,16 @@ function renderLoadingState() {
 function openPokemonDialog(pokemonIndex) {
   const dialogRef = document.getElementById("pokemon_dialog");
 
+  currentPokemonIndex = pokemonIndex;
+
   document.body.classList.add("no_scroll");
   dialogRef.innerHTML = getPokemonDialogTemplate(pokemonIndex);
-  dialogRef.showModal();
 
+  if (!dialogRef.open) {
+    dialogRef.showModal();
+  }
+
+  dialogRef.removeEventListener("click", closeDialogOnBackdropClick);
   dialogRef.addEventListener("click", closeDialogOnBackdropClick);
 }
 
@@ -62,18 +70,6 @@ function closeDialogOnBackdropClick(event) {
 
   if (event.target === dialogRef) {
     closePokemonDialog();
-  }
-}
-
-function renderDialogTab(pokemonIndex, tabName) {
-  const tabContentRef = document.getElementById("dialog_tab_content");
-
-  if (tabName === "about") {
-    tabContentRef.innerHTML = getDialogAboutTemplate(pokemonIndex);
-  }
-
-  if (tabName === "stats") {
-    tabContentRef.innerHTML = getDialogStatsTemplate(pokemonIndex);
   }
 }
 
@@ -137,4 +133,24 @@ function getEvolutionNamesFromChain(chain) {
   }
 
   return evolutionNames;
+}
+
+function showPreviousPokemon() {
+  let previousPokemonIndex = currentPokemonIndex - 1;
+
+  if (previousPokemonIndex < 0) {
+    previousPokemonIndex = pokemonDetails.length - 1;
+  }
+
+  openPokemonDialog(previousPokemonIndex);
+}
+
+function showNextPokemon() {
+  let nextPokemonIndex = currentPokemonIndex + 1;
+
+  if (nextPokemonIndex >= pokemonDetails.length) {
+    nextPokemonIndex = 0;
+  }
+
+  openPokemonDialog(nextPokemonIndex);
 }
