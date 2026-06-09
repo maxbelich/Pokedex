@@ -5,9 +5,18 @@ function getMainTemplate() {
       <p>Search and explore Pokémon</p>
     </section>
 
-    <section class="pokemon_content">
-      <div id="pokemon_cards"></div>
-    </section>
+<section class="pokemon_content">
+  <div id="pokemon_cards"></div>
+
+  <button 
+    class="load_more_btn" 
+    id="load_more_btn"
+    type="button"
+    onclick="loadMorePokemon()"
+  >
+    Load More
+  </button>
+</section>
 
     <dialog id="pokemon_dialog" class="pokemon_dialog"></dialog>
   `;
