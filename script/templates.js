@@ -230,10 +230,38 @@ function formatPokemonStatName(statName) {
   return formatPokemonText(statName);
 }
 
-function getDialogEvolutionTemplate() {
+function getDialogEvolutionTemplate(evolutionNames) {
+  let evolutionTemplate = "";
+
+  for (
+    let evolutionIndex = 0;
+    evolutionIndex < evolutionNames.length;
+    evolutionIndex++
+  ) {
+    evolutionTemplate += /*html*/ `
+      <span class="evolution_name">
+        ${formatPokemonText(evolutionNames[evolutionIndex])}
+      </span>
+    `;
+
+    if (evolutionIndex < evolutionNames.length - 1) {
+      evolutionTemplate += /*html*/ `
+        <span class="evolution_arrow">→</span>
+      `;
+    }
+  }
+
   return /*html*/ `
-    <div class="pokemon_evolution_placeholder">
-      <p>Evolution data coming soon.</p>
+    <div class="pokemon_evolution">
+      ${evolutionTemplate}
+    </div>
+  `;
+}
+
+function getDialogTabLoadingTemplate() {
+  return /*html*/ `
+    <div class="dialog_tab_loading">
+      <p>Loading Evolution...</p>
     </div>
   `;
 }

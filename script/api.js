@@ -13,3 +13,17 @@ async function fetchPokemonDetails(url) {
 
   return data;
 }
+
+async function fetchPokemonSpecies(pokemonName) {
+  let response = await fetch(`${BASE_URL}pokemon-species/${pokemonName}`);
+  let data = await response.json();
+
+  return data;
+}
+
+async function fetchEvolutionChain(url) {
+  let response = await fetch(url);
+  let data = await response.json();
+
+  return data;
+}

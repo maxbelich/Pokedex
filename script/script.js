@@ -77,7 +77,7 @@ function renderDialogTab(pokemonIndex, tabName) {
   }
 }
 
-function renderDialogTab(pokemonIndex, tabName) {
+async function renderDialogTab(pokemonIndex, tabName) {
   const tabContentRef = document.getElementById("dialog_tab_content");
 
   updateActiveDialogTab(tabName);
@@ -91,7 +91,10 @@ function renderDialogTab(pokemonIndex, tabName) {
   }
 
   if (tabName === "evolution") {
-    tabContentRef.innerHTML = getDialogEvolutionTemplate();
+    tabContentRef.innerHTML = getDialogTabLoadingTemplate();
+
+    let evolutionNames = await loadPokemonEvolution(pokemonIndex);
+    tabContentRef.innerHTML = getDialogEvolutionTemplate(evolutionNames);
   }
 }
 
@@ -103,4 +106,35 @@ function updateActiveDialogTab(activeTabName) {
   document
     .getElementById(`dialog_tab_${activeTabName}`)
     .classList.add("active");
+}
+
+async function loadPokemonEvolution(pokemonIndex) {
+  let pokemon = pokemonDetails[pokemonIndex];
+  let pokemonName = pokemon.name;
+
+  if (evolutionCache[pokemonName]) {
+    return evolutionCache[pokemonName];
+  }
+
+  let speciesData = await fetchPokemonSpecies(pokemonName);
+  let evolutionData = await fetchEvolutionChain(
+    speciesData.evolution_chain.url,
+  );
+  let evolutionNames = getEvolutionNamesFromChain(evolutionData.chain);
+
+  evolutionCache[pokemonName] = evolutionNames;
+
+  return evolutionNames;
+}
+
+function getEvolutionNamesFromChain(chain) {
+  let evolutionNames = [];
+  let currentEvolution = chain;
+
+  while (currentEvolution) {
+    evolutionNames.push(currentEvolution.species.name);
+    currentEvolution = currentEvolution.evolves_to[0];
+  }
+
+  return evolutionNames;
 }
