@@ -1,4 +1,5 @@
 let currentPokemonIndex = 0;
+let lockedScrollY = 0;
 
 async function init() {
   renderMain();
@@ -71,15 +72,18 @@ function renderLoadingState() {
 
 function openPokemonDialog(pokemonIndex) {
   const dialogRef = document.getElementById("pokemon_dialog");
+  const isDialogAlreadyOpen = dialogRef.open;
 
   currentPokemonIndex = pokemonIndex;
 
-  document.body.classList.add("no_scroll");
-  dialogRef.innerHTML = getPokemonDialogTemplate(pokemonIndex);
-
-  if (!dialogRef.open) {
+  if (!isDialogAlreadyOpen) {
+    lockedScrollY = window.scrollY;
+    document.body.style.setProperty("--scroll-y", `-${lockedScrollY}px`);
+    document.body.classList.add("no_scroll");
     dialogRef.showModal();
   }
+
+  dialogRef.innerHTML = getPokemonDialogTemplate(pokemonIndex);
 
   dialogRef.removeEventListener("click", closeDialogOnBackdropClick);
   dialogRef.addEventListener("click", closeDialogOnBackdropClick);
@@ -89,8 +93,11 @@ function closePokemonDialog() {
   const dialogRef = document.getElementById("pokemon_dialog");
 
   document.body.classList.remove("no_scroll");
+  document.body.style.removeProperty("--scroll-y");
   dialogRef.removeEventListener("click", closeDialogOnBackdropClick);
   dialogRef.close();
+
+  window.scrollTo(0, lockedScrollY);
 }
 
 function closeDialogOnBackdropClick(event) {
@@ -268,4 +275,18 @@ function hideLoadMoreError() {
   const loadMoreErrorRef = document.getElementById("load_more_error");
 
   loadMoreErrorRef.classList.add("invisible");
+}
+
+function getPokemonMaxStatValue(pokemon) {
+  let maxStatValue = 100;
+
+  for (let statIndex = 0; statIndex < pokemon.stats.length; statIndex++) {
+    let statValue = pokemon.stats[statIndex].base_stat;
+
+    if (statValue > maxStatValue) {
+      maxStatValue = statValue;
+    }
+  }
+
+  return maxStatValue;
 }

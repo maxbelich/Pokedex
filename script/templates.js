@@ -252,12 +252,13 @@ function getDialogStatsTemplate(pokemonIndex) {
   let pokemon = pokemonDetails[pokemonIndex];
   let mainType = pokemon.types[0].type.name;
   let mainColor = typeColors[mainType] || "#777";
+  let maxStatValue = getPokemonMaxStatValue(pokemon);
   let statsTemplate = "";
 
   for (let statIndex = 0; statIndex < pokemon.stats.length; statIndex++) {
     let statName = formatPokemonStatName(pokemon.stats[statIndex].stat.name);
     let statValue = pokemon.stats[statIndex].base_stat;
-    let statBarWidth = Math.min(statValue, 100);
+    let statBarWidth = (statValue / maxStatValue) * 100;
 
     statsTemplate += /*html*/ `
       <div class="pokemon_stat_row">
