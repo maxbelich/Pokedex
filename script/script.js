@@ -221,7 +221,12 @@ function renderLoadMoreButtonLoading() {
   const loadMoreButtonRef = document.getElementById("load_more_btn");
 
   loadMoreButtonRef.disabled = true;
-  loadMoreButtonRef.innerText = "Loading...";
+  loadMoreButtonRef.innerHTML = /*html*/ `
+    Loading
+    <span class="loading_dot">.</span>
+    <span class="loading_dot">.</span>
+    <span class="loading_dot">.</span>
+  `;
 }
 
 function renderLoadMoreButtonDefault() {
