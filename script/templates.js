@@ -298,32 +298,80 @@ function formatPokemonStatName(statName) {
   return formatPokemonText(statName);
 }
 
-function getDialogEvolutionTemplate(evolutionNames) {
+function getDialogEvolutionTemplate(evolutionPaths) {
   let evolutionTemplate = "";
+  let evolutionClass = getEvolutionLayoutClass(evolutionPaths);
 
-  for (
-    let evolutionIndex = 0;
-    evolutionIndex < evolutionNames.length;
-    evolutionIndex++
-  ) {
-    evolutionTemplate += /*html*/ `
-      <span class="evolution_name">
-        ${formatPokemonText(evolutionNames[evolutionIndex])}
-      </span>
-    `;
-
-    if (evolutionIndex < evolutionNames.length - 1) {
-      evolutionTemplate += /*html*/ `
-        <span class="evolution_arrow">→</span>
-      `;
-    }
+  for (let pathIndex = 0; pathIndex < evolutionPaths.length; pathIndex++) {
+    evolutionTemplate += getEvolutionPathTemplate(evolutionPaths[pathIndex]);
   }
 
   return /*html*/ `
-    <div class="pokemon_evolution">
+    <div class="pokemon_evolution ${evolutionClass}">
       ${evolutionTemplate}
     </div>
   `;
+}
+
+function getEvolutionLayoutClass(evolutionPaths) {
+  if (evolutionPaths.length === 1 && evolutionPaths[0].length >= 3) {
+    return "pokemon_evolution_single_chain";
+  }
+
+  return "pokemon_evolution_multiple_paths";
+}
+
+function getEvolutionPathTemplate(evolutionPath) {
+  let pathTemplate = "";
+
+  for (let stepIndex = 0; stepIndex < evolutionPath.length; stepIndex++) {
+    let evolutionStep = evolutionPath[stepIndex];
+
+    if (stepIndex > 0) {
+      pathTemplate += getEvolutionConditionTemplate(evolutionStep.condition);
+    }
+
+    pathTemplate += getEvolutionPokemonTemplate(evolutionStep);
+  }
+
+  return /*html*/ `
+    <div class="evolution_path">
+      ${pathTemplate}
+    </div>
+  `;
+}
+
+function getEvolutionConditionTemplate(conditionText) {
+  return /*html*/ `
+    <div class="evolution_condition">
+      <span>${conditionText}</span>
+      <strong>→</strong>
+    </div>
+  `;
+}
+
+function getEvolutionPokemonTemplate(evolutionStep) {
+  let pokemon = evolutionStep.pokemon;
+  let imageSrc = getEvolutionPokemonImage(pokemon);
+
+  return /*html*/ `
+    <div class="evolution_pokemon">
+      <img src="${imageSrc}" alt="${evolutionStep.name}">
+      <span>${formatPokemonText(evolutionStep.name)}</span>
+    </div>
+  `;
+}
+
+function getEvolutionPokemonImage(pokemon) {
+  if (pokemon.sprites.other["official-artwork"].front_default) {
+    return pokemon.sprites.other["official-artwork"].front_default;
+  }
+
+  if (pokemon.sprites.front_default) {
+    return pokemon.sprites.front_default;
+  }
+
+  return "./assets/icons/pokeball_color.svg";
 }
 
 function getDialogTabLoadingTemplate() {

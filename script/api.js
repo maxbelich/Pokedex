@@ -27,3 +27,10 @@ async function fetchEvolutionChain(url) {
 
   return data;
 }
+
+async function fetchPokemonDetailsByName(pokemonName) {
+  let response = await fetch(`${BASE_URL}pokemon/${pokemonName}`);
+  let data = await response.json();
+
+  return data;
+}
