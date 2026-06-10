@@ -1,4 +1,5 @@
 let currentPokemonIndex = 0;
+let currentDialogTab = "about";
 let lockedScrollY = 0;
 
 async function init() {
@@ -77,6 +78,7 @@ function openPokemonDialog(pokemonIndex) {
   currentPokemonIndex = pokemonIndex;
 
   if (!isDialogAlreadyOpen) {
+    currentDialogTab = "about";
     lockedScrollY = window.scrollY;
     document.body.style.setProperty("--scroll-y", `-${lockedScrollY}px`);
     document.body.classList.add("no_scroll");
@@ -85,6 +87,10 @@ function openPokemonDialog(pokemonIndex) {
 
   dialogRef.innerHTML = getPokemonDialogTemplate(pokemonIndex);
 
+  if (currentDialogTab !== "about") {
+    renderDialogTab(pokemonIndex, currentDialogTab);
+  }
+
   dialogRef.removeEventListener("click", closeDialogOnBackdropClick);
   dialogRef.addEventListener("click", closeDialogOnBackdropClick);
 }
@@ -92,6 +98,7 @@ function openPokemonDialog(pokemonIndex) {
 function closePokemonDialog() {
   const dialogRef = document.getElementById("pokemon_dialog");
 
+  currentDialogTab = "about";
   document.body.classList.remove("no_scroll");
   document.body.style.removeProperty("--scroll-y");
   dialogRef.removeEventListener("click", closeDialogOnBackdropClick);
@@ -110,6 +117,8 @@ function closeDialogOnBackdropClick(event) {
 
 async function renderDialogTab(pokemonIndex, tabName) {
   const tabContentRef = document.getElementById("dialog_tab_content");
+
+  currentDialogTab = tabName;
 
   updateActiveDialogTab(tabName);
 
