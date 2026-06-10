@@ -50,7 +50,7 @@ function getMainTemplate() {
     <footer class="page_footer">
       <div class="page_container page_footer_content">
         <p>Pokédex</p>
-        <p>Data from PokéAPI</p>
+        <p>Data from <a href="https://pokeapi.co/" target="blank"><img class="pokeapi_logo" src="./assets/icons/pokeapi.png" alt=""></a></p>
       </div>
     </footer>
 
