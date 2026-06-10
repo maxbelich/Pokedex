@@ -23,3 +23,4 @@ const typeColors = {
 };
 
 let evolutionCache = {};
+let pokemonDetailsCache = {};
