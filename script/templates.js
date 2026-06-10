@@ -59,12 +59,15 @@ function getMainTemplate() {
 }
 
 function getPokemonCardTemplate(pokemonIndex) {
+  const mainType = pokemonDetails[pokemonIndex].types[0].type.name;
+  const mainTypeColor = typeColors[mainType];
+
   return /*html*/ `
     <button 
       class="pokemon_card" 
-      type="button"
-      onclick="openPokemonDialog(${pokemonIndex})"
+      onclick="openPokemonDialog(${pokemonIndex})" 
       aria-label="Open details for ${pokemonDetails[pokemonIndex].name}"
+      style="--pokemon-main-color: ${mainTypeColor};"
     >
       <span>#${formatPokemonId(pokemonDetails[pokemonIndex].id)}</span>
       <h2>${pokemonDetails[pokemonIndex].name}</h2>
@@ -100,7 +103,7 @@ function getPokemonTypesTemplate(pokemonIndex) {
 function getLoadingTemplate() {
   return /*html*/ `
     <div class="loading_state">
-      <img class="loading_pokeball" src="./assets/imgs/pokeball_bg.svg" alt="Loading Pokéball">
+      <img class="loading_pokeball" src="./assets/icons/pokeball_color.svg" alt="Loading Pokéball">
       <p class="loading_text">
         Loading Pokemon
         <span class="loading_dot">.</span>
