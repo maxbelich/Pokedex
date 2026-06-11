@@ -49,7 +49,7 @@ function getMainTemplate() {
 
     <footer class="page_footer">
       <div class="page_container page_footer_content">
-        <p>Pokédex</p>
+        <p>Made by Max</p>
 
         <p>
           Data from
