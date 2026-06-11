@@ -1,6 +1,6 @@
-async function fetchPokemonList() {
+async function fetchPokemonList(limit = POKEMON_LIMIT) {
   let response = await fetch(
-    `${BASE_URL}pokemon?limit=${POKEMON_LIMIT}&offset=${currentOffset}`,
+    `${BASE_URL}pokemon?limit=${limit}&offset=${currentOffset}`,
   );
   let data = await response.json();
 

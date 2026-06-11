@@ -178,13 +178,21 @@ function showNextPokemon() {
 async function loadMorePokemon() {
   let nextOffset = currentOffset + POKEMON_LIMIT;
 
+  if (nextOffset >= MAX_POKEMON_ID) {
+    hideLoadMoreButton();
+    return;
+  }
+
+  let remainingPokemon = MAX_POKEMON_ID - nextOffset;
+  let nextLimit = Math.min(POKEMON_LIMIT, remainingPokemon);
+
   renderLoadMoreButtonLoading();
   hideLoadMoreError();
 
   try {
     currentOffset = nextOffset;
 
-    let pokemonList = await fetchPokemonList();
+    let pokemonList = await fetchPokemonList(nextLimit);
     let newPokemon = pokemonList.results;
     let newPokemonDetails = await loadNewPokemonDetails(newPokemon);
 
@@ -192,6 +200,10 @@ async function loadMorePokemon() {
     pokemonDetails = pokemonDetails.concat(newPokemonDetails);
 
     handlePokemonSearch();
+
+    if (pokemonDetails.length >= MAX_POKEMON_ID) {
+      hideLoadMoreButton();
+    }
   } catch (error) {
     console.error("More Pokemon could not be loaded:", error);
 

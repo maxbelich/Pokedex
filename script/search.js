@@ -1,8 +1,10 @@
 function handlePokemonSearch() {
   const searchInputRef = document.getElementById("pokemon_search_input");
+
   let searchValue = searchInputRef.value.trim().toLowerCase();
   let cleanedSearchValue = searchValue.replace("#", "");
   let isIdSearch = /^\d+$/.test(cleanedSearchValue);
+  let searchedPokemonId = Number(cleanedSearchValue);
 
   if (searchValue === "") {
     hidePokemonSearchError();
@@ -10,8 +12,16 @@ function handlePokemonSearch() {
     return;
   }
 
+  if (isIdSearch && searchedPokemonId > MAX_POKEMON_ID) {
+    showPokemonSearchError(
+      `Only Pokémon #001 to #${MAX_POKEMON_ID} are available.`,
+    );
+    renderPokemonCards([]);
+    return;
+  }
+
   if (!isIdSearch && searchValue.length < 3) {
-    showPokemonSearchError();
+    showPokemonSearchError("Min. 3 characters required.");
     renderPokemonCards();
     return;
   }
@@ -19,6 +29,7 @@ function handlePokemonSearch() {
   hidePokemonSearchError();
 
   let filteredPokemonIndexes = getFilteredPokemonIndexes(searchValue);
+
   renderPokemonCards(filteredPokemonIndexes);
 }
 
@@ -48,9 +59,10 @@ function getFilteredPokemonIndexes(searchValue) {
   return filteredPokemonIndexes;
 }
 
-function showPokemonSearchError() {
+function showPokemonSearchError(message = "Min. 3 characters required.") {
   const searchErrorRef = document.getElementById("pokemon_search_error");
 
+  searchErrorRef.innerText = message;
   searchErrorRef.classList.remove("invisible");
 }
 
