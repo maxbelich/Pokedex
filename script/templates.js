@@ -15,10 +15,11 @@ function getMainTemplate() {
               type="search"
               placeholder="Name/ID"
               aria-label="Search Pokémon by name or ID"
-              oninput="handlePokemonSearch()"
-            >
+              oninput="handlePokemonSearch()">
 
-            <p class="pokemon_search_error invisible" id="pokemon_search_error">
+            <p
+               class="pokemon_search_error invisible"
+               id="pokemon_search_error">
               Min 3. characters required
             </p>
           </div>
@@ -31,12 +32,11 @@ function getMainTemplate() {
         <section class="pokemon_content">
           <div id="pokemon_cards"></div>
 
-          <button 
-            class="load_more_btn" 
+          <button
+            class="load_more_btn"
             id="load_more_btn"
             type="button"
-            onclick="loadMorePokemon()"
-          >
+            onclick="loadMorePokemon()">
             Load More
           </button>
 
@@ -50,7 +50,16 @@ function getMainTemplate() {
     <footer class="page_footer">
       <div class="page_container page_footer_content">
         <p>Pokédex</p>
-        <p>Data from <a href="https://pokeapi.co/" target="blank"><img class="pokeapi_logo" src="./assets/icons/pokeapi.png" alt=""></a></p>
+
+        <p>
+          Data from
+          <a href="https://pokeapi.co/" target="blank">
+            <img
+              class="pokeapi_logo"
+              src="./assets/icons/pokeapi.png"
+              alt="">
+          </a>
+        </p>
       </div>
     </footer>
 
@@ -63,15 +72,19 @@ function getPokemonCardTemplate(pokemonIndex) {
   const mainTypeColor = typeColors[mainType];
 
   return /*html*/ `
-    <button 
-      class="pokemon_card" 
-      onclick="openPokemonDialog(${pokemonIndex})" 
+    <button
+      class="pokemon_card"
+      onclick="openPokemonDialog(${pokemonIndex})"
       aria-label="Open details for ${pokemonDetails[pokemonIndex].name}"
-      style="--pokemon-main-color: ${mainTypeColor};"
-    >
+      style="--pokemon-main-color: ${mainTypeColor};">
       <span>#${formatPokemonId(pokemonDetails[pokemonIndex].id)}</span>
+
       <h2>${pokemonDetails[pokemonIndex].name}</h2>
-      <img src="${pokemonDetails[pokemonIndex].sprites.front_default}" alt="${pokemonDetails[pokemonIndex].name}">
+
+      <img
+        src="${pokemonDetails[pokemonIndex].sprites.front_default}"
+        alt="${pokemonDetails[pokemonIndex].name}">
+
       <div class="pokemon_types">
         ${getPokemonTypesTemplate(pokemonIndex)}
       </div>
@@ -103,7 +116,11 @@ function getPokemonTypesTemplate(pokemonIndex) {
 function getLoadingTemplate() {
   return /*html*/ `
     <div class="loading_state">
-      <img class="loading_pokeball" src="./assets/icons/pokeball_color.svg" alt="Loading Pokéball">
+      <img
+        class="loading_pokeball"
+        src="./assets/icons/pokeball_color.svg"
+        alt="Loading Pokéball">
+
       <p class="loading_text">
         Loading Pokemon
         <span class="loading_dot">.</span>
@@ -120,28 +137,32 @@ function getPokemonDialogTemplate(pokemonIndex) {
   let mainColor = typeColors[mainType] || "#777";
 
   return /*html*/ `
-    <button 
-      class="dialog_nav_btn dialog_nav_btn_prev" 
-      type="button" 
+    <button
+      class="dialog_nav_btn dialog_nav_btn_prev"
+      type="button"
       onclick="showPreviousPokemon()"
-      aria-label="Show previous Pokemon"
-    >
+      aria-label="Show previous Pokemon">
       <
     </button>
 
-    <button 
-      class="dialog_nav_btn dialog_nav_btn_next" 
-      type="button" 
+    <button
+      class="dialog_nav_btn dialog_nav_btn_next"
+      type="button"
       onclick="showNextPokemon()"
-      aria-label="Show next Pokemon"
-    >
+      aria-label="Show next Pokemon">
       >
     </button>
 
     <div class="pokemon_dialog_card">
-      <div class="pokemon_dialog_header" style="background-color: ${mainColor}">
+      <div
+        class="pokemon_dialog_header"
+        style="background-color: ${mainColor}">
         <div class="pokemon_dialog_topline">
-          <button class="dialog_back_btn" type="button" onclick="closePokemonDialog()" aria-label="Close dialog">
+          <button
+            class="dialog_back_btn"
+            type="button"
+            onclick="closePokemonDialog()"
+            aria-label="Close dialog">
             ←
           </button>
 
@@ -150,11 +171,10 @@ function getPokemonDialogTemplate(pokemonIndex) {
           <span>#${formatPokemonId(pokemon.id)}</span>
         </div>
 
-        <img 
+        <img
           class="dialog_pokemon_img"
-          src="${pokemon.sprites.other["official-artwork"].front_default}" 
-          alt="${pokemon.name}"
-        >
+          src="${pokemon.sprites.other["official-artwork"].front_default}"
+          alt="${pokemon.name}">
       </div>
 
       <div class="pokemon_dialog_body">
@@ -163,33 +183,30 @@ function getPokemonDialogTemplate(pokemonIndex) {
         </div>
 
         <div class="dialog_tabs">
-  <button 
-    class="dialog_tab active" 
-    id="dialog_tab_about"
-    type="button" 
-    onclick="renderDialogTab(${pokemonIndex}, 'about')"
-  >
-    About
-  </button>
+          <button
+            class="dialog_tab active"
+            id="dialog_tab_about"
+            type="button"
+            onclick="renderDialogTab(${pokemonIndex}, 'about')">
+            About
+          </button>
 
-  <button 
-    class="dialog_tab" 
-    id="dialog_tab_stats"
-    type="button" 
-    onclick="renderDialogTab(${pokemonIndex}, 'stats')"
-  >
-    Stats
-  </button>
+          <button
+            class="dialog_tab"
+            id="dialog_tab_stats"
+            type="button"
+            onclick="renderDialogTab(${pokemonIndex}, 'stats')">
+            Stats
+          </button>
 
-  <button 
-    class="dialog_tab" 
-    id="dialog_tab_evolution"
-    type="button" 
-    onclick="renderDialogTab(${pokemonIndex}, 'evolution')"
-  >
-    Evolution
-  </button>
-</div>
+          <button
+            class="dialog_tab"
+            id="dialog_tab_evolution"
+            type="button"
+            onclick="renderDialogTab(${pokemonIndex}, 'evolution')">
+            Evolution
+          </button>
+        </div>
 
         <div class="dialog_tab_content" id="dialog_tab_content">
           ${getDialogAboutTemplate(pokemonIndex)}
@@ -239,9 +256,11 @@ function getDialogAboutTemplate(pokemonIndex) {
 
       <div class="pokemon_about_item">
         <img src="./assets/icons/ability.png" alt="">
+
         <div class="pokemon_abilities_list">
           ${getPokemonAbilitiesTemplate(pokemon)}
         </div>
+
         <small>Abilities</small>
       </div>
     </div>
@@ -266,10 +285,10 @@ function getDialogStatsTemplate(pokemonIndex) {
         <span class="pokemon_stat_value">${statValue}</span>
 
         <div class="pokemon_stat_bar">
-          <div 
-            class="pokemon_stat_bar_fill" 
-            style="width: ${statBarWidth}%; background-color: ${mainColor};"
-          ></div>
+          <div
+            class="pokemon_stat_bar_fill"
+            style="width: ${statBarWidth}%; background-color: ${mainColor};">
+          </div>
         </div>
       </div>
     `;

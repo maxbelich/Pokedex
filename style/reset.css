@@ -52,13 +52,3 @@ h1, h2, h3, h4, h5, h6 {
 #root, #__next {
   isolation: isolate;
 }
-
-:root {
-  --pokedex-red: #e33535;
-  --pokedex-dark-red: #b71c1c;
-  --pokedex-black: #1f2933;
-  --pokedex-screen: #f8fafc;
-  --pokedex-border: #d9dee7;
-  --pokedex-text: #111827;
-  --pokedex-muted: #64748b;
-}

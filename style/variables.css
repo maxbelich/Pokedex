@@ -1,0 +1,20 @@
+:root {
+  --pokedex-red: #e33535;
+  --pokedex-dark-red: #b71c1c;
+  --pokedex-deep-red: #8f1414;
+
+  --pokedex-black: #1f2933;
+  --pokedex-screen: #f8fafc;
+  --pokedex-page-background: #e5e7eb;
+
+  --pokedex-border: #d9dee7;
+  --pokedex-text: #111827;
+  --pokedex-muted: #64748b;
+
+  --pokemon-yellow: #ffcb05;
+
+  --color-white: #ffffff;
+  --color-light-gray: #eeeeee;
+  --color-medium-gray: #777777;
+  --color-dark-gray: #555555;
+}
