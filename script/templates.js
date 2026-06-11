@@ -20,7 +20,7 @@ function getMainTemplate() {
             <p
                class="pokemon_search_error invisible"
                id="pokemon_search_error">
-              Min 3. characters required
+              Min 3. characters required.
             </p>
           </div>
         </div>
