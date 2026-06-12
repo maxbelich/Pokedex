@@ -49,7 +49,7 @@ function getMainTemplate() {
 
     <footer class="page_footer">
       <div class="page_container page_footer_content">
-        <p>Made by Max</p>
+        <p>Impressum</p>
 
         <p>
           Data from
@@ -398,6 +398,14 @@ function getDialogTabLoadingTemplate() {
     <div class="dialog_tab_loading">
       <p>Loading Evolution...</p>
     </div>
+  `;
+}
+
+function getDialogTabErrorTemplate(message) {
+  return /*html*/ `
+    <p class="dialog_tab_error" role="alert">
+      ${message}
+    </p>
   `;
 }
 

@@ -1,36 +1,33 @@
-async function fetchPokemonList(limit = POKEMON_LIMIT) {
-  let response = await fetch(
-    `${BASE_URL}pokemon?limit=${limit}&offset=${currentOffset}`,
-  );
-  let data = await response.json();
+async function fetchJson(url) {
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    throw new Error(
+      `Request failed with status ${response.status}: ${response.statusText}`,
+    );
+  }
+
+  const data = await response.json();
 
   return data;
+}
+
+async function fetchPokemonList(limit = POKEMON_LIMIT, offset = 0) {
+  return await fetchJson(`${BASE_URL}pokemon?limit=${limit}&offset=${offset}`);
 }
 
 async function fetchPokemonDetails(url) {
-  let response = await fetch(url);
-  let data = await response.json();
-
-  return data;
+  return await fetchJson(url);
 }
 
 async function fetchPokemonSpecies(pokemonName) {
-  let response = await fetch(`${BASE_URL}pokemon-species/${pokemonName}`);
-  let data = await response.json();
-
-  return data;
+  return await fetchJson(`${BASE_URL}pokemon-species/${pokemonName}`);
 }
 
 async function fetchEvolutionChain(url) {
-  let response = await fetch(url);
-  let data = await response.json();
-
-  return data;
+  return await fetchJson(url);
 }
 
 async function fetchPokemonDetailsByName(pokemonName) {
-  let response = await fetch(`${BASE_URL}pokemon/${pokemonName}`);
-  let data = await response.json();
-
-  return data;
+  return await fetchJson(`${BASE_URL}pokemon/${pokemonName}`);
 }

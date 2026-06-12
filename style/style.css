@@ -798,3 +798,9 @@ html {
   scrollbar-color: var(--pokedex-red) var(--pokedex-black);
   scrollbar-width: auto;
 }
+
+.dialog_tab_error {
+  margin: 32px 16px;
+  font-size: 1rem;
+  text-align: center;
+}
