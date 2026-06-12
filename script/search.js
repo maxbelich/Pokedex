@@ -1,62 +1,79 @@
 function handlePokemonSearch() {
+  const searchData = getPokemonSearchData();
+
+  if (searchData.searchValue === "") return resetPokemonSearch();
+  if (isPokemonIdAboveLimit(searchData)) return showPokemonIdLimitError();
+  if (isPokemonNameTooShort(searchData)) return showPokemonNameLengthError();
+
+  renderPokemonSearchResults(searchData);
+}
+
+function getPokemonSearchData() {
   const searchInputRef = document.getElementById("pokemon_search_input");
+  const searchValue = searchInputRef.value.trim().toLowerCase();
+  const cleanedIdValue = searchValue.replace(/^#/, "");
 
-  let searchValue = searchInputRef.value.trim().toLowerCase();
-  let cleanedSearchValue = searchValue.replace("#", "");
-  let isIdSearch = /^\d+$/.test(cleanedSearchValue);
-  let searchedPokemonId = Number(cleanedSearchValue);
+  return {
+    searchValue,
+    isIdSearch: /^\d+$/.test(cleanedIdValue),
+    pokemonId: Number(cleanedIdValue),
+  };
+}
 
-  if (searchValue === "") {
-    hidePokemonSearchError();
-    renderPokemonCards();
-    return;
-  }
+function resetPokemonSearch() {
+  hidePokemonSearchError();
+  renderPokemonCards();
+}
 
-  if (isIdSearch && searchedPokemonId > MAX_POKEMON_ID) {
-    showPokemonSearchError(
-      `Only Pokémon #001 to #${MAX_POKEMON_ID} are available.`,
-    );
-    renderPokemonCards([]);
-    return;
-  }
+function isPokemonIdAboveLimit(searchData) {
+  return searchData.isIdSearch && searchData.pokemonId > MAX_POKEMON_ID;
+}
 
-  if (!isIdSearch && searchValue.length < 3) {
-    showPokemonSearchError("Min. 3 characters required.");
-    renderPokemonCards();
-    return;
-  }
+function showPokemonIdLimitError() {
+  showPokemonSearchError(
+    `Only Pokémon #001 to #${MAX_POKEMON_ID} are available.`,
+  );
 
+  renderPokemonCards([]);
+}
+
+function isPokemonNameTooShort(searchData) {
+  return !searchData.isIdSearch && searchData.searchValue.length < 3;
+}
+
+function showPokemonNameLengthError() {
+  showPokemonSearchError("Min. 3 characters required.");
+  renderPokemonCards();
+}
+
+function renderPokemonSearchResults(searchData) {
   hidePokemonSearchError();
 
-  let filteredPokemonIndexes = getFilteredPokemonIndexes(searchValue);
+  const filteredPokemonIndexes = getFilteredPokemonIndexes(searchData);
 
   renderPokemonCards(filteredPokemonIndexes);
 }
 
-function getFilteredPokemonIndexes(searchValue) {
-  let filteredPokemonIndexes = [];
-  let cleanedSearchValue = searchValue.replace("#", "");
+function getFilteredPokemonIndexes(searchData) {
+  const filteredPokemonIndexes = [];
 
-  for (
-    let pokemonIndex = 0;
-    pokemonIndex < pokemonDetails.length;
-    pokemonIndex++
-  ) {
-    let pokemon = pokemonDetails[pokemonIndex];
-    let pokemonName = pokemon.name.toLowerCase();
-    let pokemonId = String(pokemon.id);
-    let formattedPokemonId = formatPokemonId(pokemon.id);
+  for (let index = 0; index < pokemonDetails.length; index++) {
+    const pokemon = pokemonDetails[index];
 
-    if (
-      pokemonName.includes(searchValue) ||
-      pokemonId === cleanedSearchValue ||
-      formattedPokemonId === cleanedSearchValue
-    ) {
-      filteredPokemonIndexes.push(pokemonIndex);
+    if (doesPokemonMatchSearch(pokemon, searchData)) {
+      filteredPokemonIndexes.push(index);
     }
   }
 
   return filteredPokemonIndexes;
+}
+
+function doesPokemonMatchSearch(pokemon, searchData) {
+  if (searchData.isIdSearch) {
+    return pokemon.id === searchData.pokemonId;
+  }
+
+  return pokemon.name.toLowerCase().includes(searchData.searchValue);
 }
 
 function showPokemonSearchError(message = "Min. 3 characters required.") {
