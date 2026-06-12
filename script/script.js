@@ -1,33 +1,43 @@
-let currentPokemonIndex = 0;
-let currentDialogTab = "about";
-let lockedScrollY = 0;
-let dialogContentRequestId = 0;
-
 async function init() {
   renderMain();
   setupDialogEvents();
-  hideLoadMoreButton();
-  renderLoadingState();
+  prepareInitialLoading();
 
   try {
-    const pokemonList = await fetchPokemonList(POKEMON_LIMIT, currentOffset);
-
-    allPokemon = pokemonList.results;
-
-    await loadPokemonDetails();
-
-    renderPokemonCards();
-
-    if (pokemonDetails.length < MAX_POKEMON_ID) {
-      showLoadMoreButton();
-    }
+    await loadInitialPokemon();
+    renderInitialPokemon();
   } catch (error) {
-    console.error("Pokemon could not be loaded:", error);
-
-    renderErrorState("Pokemon could not be loaded. Please try again later.");
-
-    hideLoadMoreButton();
+    handleInitialLoadError(error);
   }
+}
+
+function prepareInitialLoading() {
+  hideLoadMoreButton();
+  renderLoadingState();
+}
+
+async function loadInitialPokemon() {
+  const pokemonList = await fetchPokemonList(POKEMON_LIMIT, currentOffset);
+
+  allPokemon = pokemonList.results;
+
+  await loadPokemonDetails();
+}
+
+function renderInitialPokemon() {
+  renderPokemonCards();
+
+  if (pokemonDetails.length < MAX_POKEMON_ID) {
+    showLoadMoreButton();
+  }
+}
+
+function handleInitialLoadError(error) {
+  console.error("Pokemon could not be loaded:", error);
+
+  renderErrorState("Pokemon could not be loaded. Please try again later.");
+
+  hideLoadMoreButton();
 }
 
 function renderMain() {
@@ -36,27 +46,22 @@ function renderMain() {
   mainContentRef.innerHTML = getMainTemplate();
 }
 
-function setupDialogEvents() {
-  const dialogRef = document.getElementById("pokemon_dialog");
-
-  dialogRef.addEventListener("click", closeDialogOnBackdropClick);
-  dialogRef.addEventListener("cancel", handleDialogCancel);
-}
-
-function handleDialogCancel(event) {
-  event.preventDefault();
-
-  closePokemonDialog();
-}
-
 function renderPokemonCards(pokemonIndexes = getAllPokemonIndexes()) {
   const pokemonCardsRef = document.getElementById("pokemon_cards");
 
   if (pokemonIndexes.length === 0) {
-    pokemonCardsRef.innerHTML = getNoPokemonFoundTemplate();
+    renderNoPokemonFound(pokemonCardsRef);
     return;
   }
 
+  pokemonCardsRef.innerHTML = getPokemonCardsTemplate(pokemonIndexes);
+}
+
+function renderNoPokemonFound(pokemonCardsRef) {
+  pokemonCardsRef.innerHTML = getNoPokemonFoundTemplate();
+}
+
+function getPokemonCardsTemplate(pokemonIndexes) {
   let pokemonCardsTemplate = "";
 
   for (let index = 0; index < pokemonIndexes.length; index++) {
@@ -65,7 +70,7 @@ function renderPokemonCards(pokemonIndexes = getAllPokemonIndexes()) {
     pokemonCardsTemplate += getPokemonCardTemplate(pokemonIndex);
   }
 
-  pokemonCardsRef.innerHTML = pokemonCardsTemplate;
+  return pokemonCardsTemplate;
 }
 
 function getAllPokemonIndexes() {
@@ -96,187 +101,74 @@ function renderLoadingState() {
   pokemonCardsRef.innerHTML = getLoadingTemplate();
 }
 
-function openPokemonDialog(pokemonIndex) {
-  const dialogRef = document.getElementById("pokemon_dialog");
-  const isDialogAlreadyOpen = dialogRef.open;
-
-  currentPokemonIndex = pokemonIndex;
-
-  dialogContentRequestId++;
-
-  if (!isDialogAlreadyOpen) {
-    currentDialogTab = "about";
-    lockedScrollY = window.scrollY;
-
-    document.body.style.setProperty("--scroll-y", `-${lockedScrollY}px`);
-
-    document.body.classList.add("no_scroll");
-
-    dialogRef.showModal();
-  }
-
-  dialogRef.innerHTML = getPokemonDialogTemplate(pokemonIndex);
-
-  if (currentDialogTab !== "about") {
-    renderDialogTab(pokemonIndex, currentDialogTab);
-  }
-}
-
-function closePokemonDialog() {
-  const dialogRef = document.getElementById("pokemon_dialog");
-
-  dialogContentRequestId++;
-  currentDialogTab = "about";
-
-  document.body.classList.remove("no_scroll");
-  document.body.style.removeProperty("--scroll-y");
-
-  if (dialogRef.open) {
-    dialogRef.close();
-  }
-
-  window.scrollTo(0, lockedScrollY);
-}
-
-function closeDialogOnBackdropClick(event) {
-  const dialogRef = document.getElementById("pokemon_dialog");
-
-  if (event.target === dialogRef) {
-    closePokemonDialog();
-  }
-}
-
-async function renderDialogTab(pokemonIndex, tabName) {
-  const tabContentRef = document.getElementById("dialog_tab_content");
-
-  const requestId = ++dialogContentRequestId;
-
-  currentDialogTab = tabName;
-
-  updateActiveDialogTab(tabName);
-
-  if (tabName === "about") {
-    tabContentRef.innerHTML = getDialogAboutTemplate(pokemonIndex);
-
-    return;
-  }
-
-  if (tabName === "stats") {
-    tabContentRef.innerHTML = getDialogStatsTemplate(pokemonIndex);
-
-    return;
-  }
-
-  if (tabName === "evolution") {
-    tabContentRef.innerHTML = getDialogTabLoadingTemplate();
-
-    try {
-      const evolutionPaths = await loadPokemonEvolution(pokemonIndex);
-
-      if (!isCurrentDialogContentRequest(requestId, pokemonIndex, tabName)) {
-        return;
-      }
-
-      const currentTabContentRef =
-        document.getElementById("dialog_tab_content");
-
-      currentTabContentRef.innerHTML =
-        getDialogEvolutionTemplate(evolutionPaths);
-    } catch (error) {
-      console.error("Pokemon evolution could not be loaded:", error);
-
-      if (!isCurrentDialogContentRequest(requestId, pokemonIndex, tabName)) {
-        return;
-      }
-
-      const currentTabContentRef =
-        document.getElementById("dialog_tab_content");
-
-      currentTabContentRef.innerHTML = getDialogTabErrorTemplate(
-        "Evolution data could not be loaded. Please try again later.",
-      );
-    }
-  }
-}
-
-function isCurrentDialogContentRequest(requestId, pokemonIndex, tabName) {
-  const dialogRef = document.getElementById("pokemon_dialog");
-
-  return (
-    dialogRef.open &&
-    requestId === dialogContentRequestId &&
-    pokemonIndex === currentPokemonIndex &&
-    tabName === currentDialogTab
-  );
-}
-
-function updateActiveDialogTab(activeTabName) {
-  document.querySelectorAll(".dialog_tab").forEach((tab) => {
-    tab.classList.remove("active");
-  });
-
-  document
-    .getElementById(`dialog_tab_${activeTabName}`)
-    .classList.add("active");
-}
-
-function showPreviousPokemon() {
-  let previousPokemonIndex = currentPokemonIndex - 1;
-
-  if (previousPokemonIndex < 0) {
-    previousPokemonIndex = pokemonDetails.length - 1;
-  }
-
-  openPokemonDialog(previousPokemonIndex);
-}
-
-function showNextPokemon() {
-  let nextPokemonIndex = currentPokemonIndex + 1;
-
-  if (nextPokemonIndex >= pokemonDetails.length) {
-    nextPokemonIndex = 0;
-  }
-
-  openPokemonDialog(nextPokemonIndex);
-}
-
 async function loadMorePokemon() {
-  const nextOffset = currentOffset + POKEMON_LIMIT;
+  const loadData = getNextLoadData();
 
-  if (nextOffset >= MAX_POKEMON_ID) {
-    hideLoadMoreButton();
-    return;
-  }
+  if (!loadData) return hideLoadMoreButton();
 
-  const remainingPokemon = MAX_POKEMON_ID - nextOffset;
-  const nextLimit = Math.min(POKEMON_LIMIT, remainingPokemon);
-
-  renderLoadMoreButtonLoading();
-  hideLoadMoreError();
+  prepareLoadMoreRequest();
 
   try {
-    const pokemonList = await fetchPokemonList(nextLimit, nextOffset);
-
-    const newPokemon = pokemonList.results;
-    const newPokemonDetails = await loadNewPokemonDetails(newPokemon);
-
-    allPokemon = allPokemon.concat(newPokemon);
-    pokemonDetails = pokemonDetails.concat(newPokemonDetails);
-
-    currentOffset = nextOffset;
-
-    handlePokemonSearch();
-
-    if (pokemonDetails.length >= MAX_POKEMON_ID) {
-      hideLoadMoreButton();
-    }
+    await processLoadMoreRequest(loadData);
   } catch (error) {
-    console.error("More Pokemon could not be loaded:", error);
-
-    showLoadMoreError();
+    handleLoadMoreError(error);
   } finally {
     renderLoadMoreButtonDefault();
   }
+}
+
+function getNextLoadData() {
+  const nextOffset = currentOffset + POKEMON_LIMIT;
+
+  if (nextOffset >= MAX_POKEMON_ID) return null;
+
+  const remainingPokemon = MAX_POKEMON_ID - nextOffset;
+
+  return {
+    offset: nextOffset,
+    limit: Math.min(POKEMON_LIMIT, remainingPokemon),
+  };
+}
+
+function prepareLoadMoreRequest() {
+  renderLoadMoreButtonLoading();
+  hideLoadMoreError();
+}
+
+async function processLoadMoreRequest(loadData) {
+  const pokemonBatch = await fetchNextPokemonBatch(loadData);
+
+  appendPokemonBatch(pokemonBatch, loadData.offset);
+  handlePokemonSearch();
+  hideLoadMoreButtonWhenComplete();
+}
+
+async function fetchNextPokemonBatch(loadData) {
+  const pokemonList = await fetchPokemonList(loadData.limit, loadData.offset);
+
+  const pokemon = pokemonList.results;
+  const details = await loadNewPokemonDetails(pokemon);
+
+  return { pokemon, details };
+}
+
+function appendPokemonBatch(pokemonBatch, newOffset) {
+  allPokemon = allPokemon.concat(pokemonBatch.pokemon);
+
+  pokemonDetails = pokemonDetails.concat(pokemonBatch.details);
+
+  currentOffset = newOffset;
+}
+
+function hideLoadMoreButtonWhenComplete() {
+  if (pokemonDetails.length >= MAX_POKEMON_ID) {
+    hideLoadMoreButton();
+  }
+}
+
+function handleLoadMoreError(error) {
+  console.error("More Pokemon could not be loaded:", error);
+  showLoadMoreError();
 }
 
 async function loadNewPokemonDetails(newPokemon) {
@@ -344,12 +236,10 @@ function hideLoadMoreError() {
 function getPokemonMaxStatValue(pokemon) {
   let maxStatValue = 100;
 
-  for (let statIndex = 0; statIndex < pokemon.stats.length; statIndex++) {
-    const statValue = pokemon.stats[statIndex].base_stat;
+  for (let index = 0; index < pokemon.stats.length; index++) {
+    const statValue = pokemon.stats[index].base_stat;
 
-    if (statValue > maxStatValue) {
-      maxStatValue = statValue;
-    }
+    if (statValue > maxStatValue) maxStatValue = statValue;
   }
 
   return maxStatValue;
