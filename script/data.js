@@ -1,5 +1,6 @@
 let allPokemon = [];
 let pokemonDetails = [];
+let currentOffset = 0;
 
 const typeColors = {
   normal: "#A8A77A",

@@ -1,28 +1,38 @@
 async function loadPokemonEvolution(pokemonIndex) {
-  let pokemon = pokemonDetails[pokemonIndex];
-  let pokemonName = pokemon.name;
+  const pokemon = pokemonDetails[pokemonIndex];
+  const pokemonName = pokemon.name;
 
   if (evolutionCache[pokemonName]) {
     return evolutionCache[pokemonName];
   }
 
-  let speciesData = await fetchPokemonSpecies(pokemonName);
+  const speciesData = await fetchPokemonSpecies(pokemonName);
 
-  let evolutionData = await fetchEvolutionChain(
+  const evolutionData = await fetchEvolutionChain(
     speciesData.evolution_chain.url,
   );
 
-  let evolutionPaths = getEvolutionPathsFromChain(evolutionData.chain);
+  const evolutionPaths = getEvolutionPathsFromChain(evolutionData.chain);
 
   await addPokemonDetailsToEvolutionPaths(evolutionPaths);
 
-  evolutionCache[pokemonName] = evolutionPaths;
+  cacheEvolutionPathsForAllPokemon(evolutionPaths);
 
   return evolutionPaths;
 }
 
+function cacheEvolutionPathsForAllPokemon(evolutionPaths) {
+  const pokemonNames = getUniquePokemonNamesFromEvolutionPaths(evolutionPaths);
+
+  for (let nameIndex = 0; nameIndex < pokemonNames.length; nameIndex++) {
+    const pokemonName = pokemonNames[nameIndex];
+
+    evolutionCache[pokemonName] = evolutionPaths;
+  }
+}
+
 function getEvolutionPathsFromChain(chain, conditionText = "") {
-  let currentStep = {
+  const currentStep = {
     name: chain.species.name,
     condition: conditionText,
     pokemon: null,
@@ -32,18 +42,18 @@ function getEvolutionPathsFromChain(chain, conditionText = "") {
     return [[currentStep]];
   }
 
-  let evolutionPaths = [];
+  const evolutionPaths = [];
 
   for (
     let evolutionIndex = 0;
     evolutionIndex < chain.evolves_to.length;
     evolutionIndex++
   ) {
-    let nextEvolution = chain.evolves_to[evolutionIndex];
-    let evolutionDetails = nextEvolution.evolution_details[0];
-    let nextConditionText = getEvolutionConditionText(evolutionDetails);
+    const nextEvolution = chain.evolves_to[evolutionIndex];
+    const evolutionDetails = nextEvolution.evolution_details[0];
+    const nextConditionText = getEvolutionConditionText(evolutionDetails);
 
-    let nextPaths = getEvolutionPathsFromChain(
+    const nextPaths = getEvolutionPathsFromChain(
       nextEvolution,
       nextConditionText,
     );
@@ -57,17 +67,19 @@ function getEvolutionPathsFromChain(chain, conditionText = "") {
 }
 
 async function addPokemonDetailsToEvolutionPaths(evolutionPaths) {
-  let pokemonNames = getUniquePokemonNamesFromEvolutionPaths(evolutionPaths);
+  const pokemonNames = getUniquePokemonNamesFromEvolutionPaths(evolutionPaths);
 
-  for (let nameIndex = 0; nameIndex < pokemonNames.length; nameIndex++) {
-    await getPokemonDetailsByNameCached(pokemonNames[nameIndex]);
-  }
+  const pokemonDetailPromises = pokemonNames.map((pokemonName) => {
+    return getPokemonDetailsByNameCached(pokemonName);
+  });
+
+  await Promise.all(pokemonDetailPromises);
 
   for (let pathIndex = 0; pathIndex < evolutionPaths.length; pathIndex++) {
-    let path = evolutionPaths[pathIndex];
+    const path = evolutionPaths[pathIndex];
 
     for (let stepIndex = 0; stepIndex < path.length; stepIndex++) {
-      let pokemonName = path[stepIndex].name;
+      const pokemonName = path[stepIndex].name;
 
       path[stepIndex].pokemon = pokemonDetailsCache[pokemonName];
     }
@@ -75,13 +87,13 @@ async function addPokemonDetailsToEvolutionPaths(evolutionPaths) {
 }
 
 function getUniquePokemonNamesFromEvolutionPaths(evolutionPaths) {
-  let pokemonNames = [];
+  const pokemonNames = [];
 
   for (let pathIndex = 0; pathIndex < evolutionPaths.length; pathIndex++) {
-    let path = evolutionPaths[pathIndex];
+    const path = evolutionPaths[pathIndex];
 
     for (let stepIndex = 0; stepIndex < path.length; stepIndex++) {
-      let pokemonName = path[stepIndex].name;
+      const pokemonName = path[stepIndex].name;
 
       if (!pokemonNames.includes(pokemonName)) {
         pokemonNames.push(pokemonName);
@@ -97,7 +109,7 @@ async function getPokemonDetailsByNameCached(pokemonName) {
     return pokemonDetailsCache[pokemonName];
   }
 
-  let loadedPokemon = getLoadedPokemonDetailsByName(pokemonName);
+  const loadedPokemon = getLoadedPokemonDetailsByName(pokemonName);
 
   if (loadedPokemon) {
     pokemonDetailsCache[pokemonName] = loadedPokemon;
@@ -105,7 +117,7 @@ async function getPokemonDetailsByNameCached(pokemonName) {
     return loadedPokemon;
   }
 
-  let pokemon = await fetchPokemonDetailsByName(pokemonName);
+  const pokemon = await fetchPokemonDetailsByName(pokemonName);
 
   pokemonDetailsCache[pokemonName] = pokemon;
 
