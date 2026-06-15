@@ -49,6 +49,8 @@ function renderMain() {
 function renderPokemonCards(pokemonIndexes = getAllPokemonIndexes()) {
   const pokemonCardsRef = document.getElementById("pokemon_cards");
 
+  visiblePokemonIndexes = pokemonIndexes.slice();
+
   if (pokemonIndexes.length === 0) {
     renderNoPokemonFound(pokemonCardsRef);
     return;
@@ -139,7 +141,8 @@ async function processLoadMoreRequest(loadData) {
   const pokemonBatch = await fetchNextPokemonBatch(loadData);
 
   appendPokemonBatch(pokemonBatch, loadData.offset);
-  handlePokemonSearch();
+  clearPokemonSearch();
+  renderPokemonCards();
   hideLoadMoreButtonWhenComplete();
 }
 
