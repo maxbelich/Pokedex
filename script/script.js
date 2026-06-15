@@ -1,3 +1,7 @@
+/** Controls the main app flow, including initial loading,
+ Pokémon card rendering, Load More behavior and shared UI states. */
+
+/** Starts the app, renders the layout and loads the first Pokémon batch. */
 async function init() {
   renderMain();
   setupDialogEvents();
@@ -11,11 +15,13 @@ async function init() {
   }
 }
 
+/** Hides the Load More button and shows the initial loading state. */
 function prepareInitialLoading() {
   hideLoadMoreButton();
   renderLoadingState();
 }
 
+/** Fetches the first Pokémon list and loads the matching detail data. */
 async function loadInitialPokemon() {
   const pokemonList = await fetchPokemonList(POKEMON_LIMIT, currentOffset);
 
@@ -24,6 +30,7 @@ async function loadInitialPokemon() {
   await loadPokemonDetails();
 }
 
+/** Renders the initial Pokémon cards and shows Load More if more Pokémon exist. */
 function renderInitialPokemon() {
   renderPokemonCards();
 
@@ -32,6 +39,7 @@ function renderInitialPokemon() {
   }
 }
 
+/** Handles errors from the first app load. */
 function handleInitialLoadError(error) {
   console.error("Pokemon could not be loaded:", error);
 
@@ -40,14 +48,18 @@ function handleInitialLoadError(error) {
   hideLoadMoreButton();
 }
 
+/** Renders the static page layout. */
 function renderMain() {
   const mainContentRef = document.getElementById("main_content");
 
   mainContentRef.innerHTML = getMainTemplate();
 }
 
+/** Renders the currently selected Pokémon cards and stores their visible indexes. */
 function renderPokemonCards(pokemonIndexes = getAllPokemonIndexes()) {
   const pokemonCardsRef = document.getElementById("pokemon_cards");
+
+  visiblePokemonIndexes = pokemonIndexes.slice();
 
   if (pokemonIndexes.length === 0) {
     renderNoPokemonFound(pokemonCardsRef);
@@ -57,10 +69,12 @@ function renderPokemonCards(pokemonIndexes = getAllPokemonIndexes()) {
   pokemonCardsRef.innerHTML = getPokemonCardsTemplate(pokemonIndexes);
 }
 
+/** Renders the empty search result state. */
 function renderNoPokemonFound(pokemonCardsRef) {
   pokemonCardsRef.innerHTML = getNoPokemonFoundTemplate();
 }
 
+/** Builds all Pokémon card templates for the given indexes. */
 function getPokemonCardsTemplate(pokemonIndexes) {
   let pokemonCardsTemplate = "";
 
@@ -73,6 +87,7 @@ function getPokemonCardsTemplate(pokemonIndexes) {
   return pokemonCardsTemplate;
 }
 
+/** Returns indexes for all currently loaded Pokémon. */
 function getAllPokemonIndexes() {
   const pokemonIndexes = [];
 
@@ -87,6 +102,7 @@ function getAllPokemonIndexes() {
   return pokemonIndexes;
 }
 
+/** Loads detailed data for all Pokémon in the current list. */
 async function loadPokemonDetails() {
   const pokemonDetailPromises = allPokemon.map((pokemon) => {
     return fetchPokemonDetails(pokemon.url);
@@ -95,12 +111,14 @@ async function loadPokemonDetails() {
   pokemonDetails = await Promise.all(pokemonDetailPromises);
 }
 
+/** Renders the loading template inside the Pokémon card area. */
 function renderLoadingState() {
   const pokemonCardsRef = document.getElementById("pokemon_cards");
 
   pokemonCardsRef.innerHTML = getLoadingTemplate();
 }
 
+/** Loads the next Pokémon batch and updates the rendered card list. */
 async function loadMorePokemon() {
   const loadData = getNextLoadData();
 
@@ -117,6 +135,7 @@ async function loadMorePokemon() {
   }
 }
 
+/** Calculates the next offset and limit for the Load More request. */
 function getNextLoadData() {
   const nextOffset = currentOffset + POKEMON_LIMIT;
 
@@ -130,19 +149,23 @@ function getNextLoadData() {
   };
 }
 
+/** Prepares the UI before loading another Pokémon batch. */
 function prepareLoadMoreRequest() {
   renderLoadMoreButtonLoading();
   hideLoadMoreError();
 }
 
+/** Fetches, stores and renders the next Pokémon batch. */
 async function processLoadMoreRequest(loadData) {
   const pokemonBatch = await fetchNextPokemonBatch(loadData);
 
   appendPokemonBatch(pokemonBatch, loadData.offset);
-  handlePokemonSearch();
+  clearPokemonSearch();
+  renderPokemonCards();
   hideLoadMoreButtonWhenComplete();
 }
 
+/** Fetches the next Pokémon list and its detailed Pokémon data. */
 async function fetchNextPokemonBatch(loadData) {
   const pokemonList = await fetchPokemonList(loadData.limit, loadData.offset);
 
@@ -152,6 +175,7 @@ async function fetchNextPokemonBatch(loadData) {
   return { pokemon, details };
 }
 
+/** Adds the newly loaded Pokémon data to the global app state. */
 function appendPokemonBatch(pokemonBatch, newOffset) {
   allPokemon = allPokemon.concat(pokemonBatch.pokemon);
 
@@ -160,17 +184,20 @@ function appendPokemonBatch(pokemonBatch, newOffset) {
   currentOffset = newOffset;
 }
 
+/** Hides the Load More button after the final available Pokémon was loaded. */
 function hideLoadMoreButtonWhenComplete() {
   if (pokemonDetails.length >= MAX_POKEMON_ID) {
     hideLoadMoreButton();
   }
 }
 
+/** Handles errors from loading additional Pokémon. */
 function handleLoadMoreError(error) {
   console.error("More Pokemon could not be loaded:", error);
   showLoadMoreError();
 }
 
+/** Loads detail data for a newly fetched Pokémon batch. */
 async function loadNewPokemonDetails(newPokemon) {
   const pokemonDetailPromises = newPokemon.map((pokemon) => {
     return fetchPokemonDetails(pokemon.url);
@@ -179,6 +206,7 @@ async function loadNewPokemonDetails(newPokemon) {
   return await Promise.all(pokemonDetailPromises);
 }
 
+/** Disables the Load More button and shows its loading state. */
 function renderLoadMoreButtonLoading() {
   const loadMoreButtonRef = document.getElementById("load_more_btn");
 
@@ -192,6 +220,7 @@ function renderLoadMoreButtonLoading() {
   `;
 }
 
+/** Restores the default Load More button state. */
 function renderLoadMoreButtonDefault() {
   const loadMoreButtonRef = document.getElementById("load_more_btn");
 
@@ -199,40 +228,47 @@ function renderLoadMoreButtonDefault() {
   loadMoreButtonRef.innerText = "Load More";
 }
 
+/** Formats a Pokémon ID with leading zeros. */
 function formatPokemonId(id) {
   return String(id).padStart(3, "0");
 }
 
+/** Renders a general error message inside the Pokémon card area. */
 function renderErrorState(message) {
   const pokemonCardsRef = document.getElementById("pokemon_cards");
 
   pokemonCardsRef.innerHTML = getErrorTemplate(message);
 }
 
+/** Hides the Load More button. */
 function hideLoadMoreButton() {
   const loadMoreButtonRef = document.getElementById("load_more_btn");
 
   loadMoreButtonRef.classList.add("d_none");
 }
 
+/** Shows the Load More button. */
 function showLoadMoreButton() {
   const loadMoreButtonRef = document.getElementById("load_more_btn");
 
   loadMoreButtonRef.classList.remove("d_none");
 }
 
+/** Shows the Load More error message. */
 function showLoadMoreError() {
   const loadMoreErrorRef = document.getElementById("load_more_error");
 
   loadMoreErrorRef.classList.remove("invisible");
 }
 
+/** Hides the Load More error message. */
 function hideLoadMoreError() {
   const loadMoreErrorRef = document.getElementById("load_more_error");
 
   loadMoreErrorRef.classList.add("invisible");
 }
 
+/** Returns the highest stat value, using 100 as the default minimum scale. */
 function getPokemonMaxStatValue(pokemon) {
   let maxStatValue = 100;
 
