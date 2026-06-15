@@ -1,3 +1,5 @@
+/** Stores global app state, cached API data and reusable type colors. */
+
 let allPokemon = [];
 let pokemonDetails = [];
 let currentOffset = 0;
@@ -24,5 +26,5 @@ const typeColors = {
   fairy: "#D685AD",
 };
 
-let evolutionCache = {};
-let pokemonDetailsCache = {};
+const evolutionCache = {};
+const pokemonDetailsCache = {};
