@@ -280,3 +280,61 @@ function getPokemonMaxStatValue(pokemon) {
 
   return maxStatValue;
 }
+
+/** Converts Pokémon stat names from the API into shorter display labels. */
+function formatPokemonStatName(statName) {
+  if (statName === "hp") {
+    return "HP";
+  }
+
+  if (statName === "special-attack") {
+    return "Sp. Atk";
+  }
+
+  if (statName === "special-defense") {
+    return "Sp. Def";
+  }
+
+  return formatPokemonText(statName);
+}
+
+/** Converts API text like "special-attack" into readable text like "Special Attack". */
+function formatPokemonText(text) {
+  return text
+    .replace(/-/g, " ")
+    .replace(/\b\w/g, (firstLetter) => firstLetter.toUpperCase());
+}
+
+/** Builds the ability labels for the first two Pokémon abilities. */
+function getPokemonAbilitiesTemplate(pokemon) {
+  const abilities = pokemon.abilities.slice(0, 2);
+  let abilitiesTemplate = "";
+
+  for (let abilityIndex = 0; abilityIndex < abilities.length; abilityIndex++) {
+    const abilityName = abilities[abilityIndex].ability.name;
+
+    abilitiesTemplate += /*html*/ `
+      <span>${formatPokemonText(abilityName)}</span>
+    `;
+  }
+
+  return abilitiesTemplate;
+}
+
+/** Builds all stat row templates for one Pokémon. */
+function getPokemonStatsTemplate(pokemon) {
+  const mainType = pokemon.types[0].type.name;
+  const mainColor = typeColors[mainType] || "#777";
+  const maxStatValue = getPokemonMaxStatValue(pokemon);
+  let statsTemplate = "";
+
+  for (let statIndex = 0; statIndex < pokemon.stats.length; statIndex++) {
+    statsTemplate += getPokemonStatRowTemplate(
+      pokemon.stats[statIndex],
+      maxStatValue,
+      mainColor,
+    );
+  }
+
+  return statsTemplate;
+}

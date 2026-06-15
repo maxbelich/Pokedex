@@ -216,27 +216,6 @@ function getPokemonDialogTemplate(pokemonIndex) {
   `;
 }
 
-function formatPokemonText(text) {
-  return text
-    .replace(/-/g, " ")
-    .replace(/\b\w/g, (firstLetter) => firstLetter.toUpperCase());
-}
-
-function getPokemonAbilitiesTemplate(pokemon) {
-  let abilities = pokemon.abilities.slice(0, 2);
-  let abilitiesTemplate = "";
-
-  for (let abilityIndex = 0; abilityIndex < abilities.length; abilityIndex++) {
-    let abilityName = abilities[abilityIndex].ability.name;
-
-    abilitiesTemplate += /*html*/ `
-      <span>${formatPokemonText(abilityName)}</span>
-    `;
-  }
-
-  return abilitiesTemplate;
-}
-
 function getDialogAboutTemplate(pokemonIndex) {
   let pokemon = pokemonDetails[pokemonIndex];
 
@@ -268,53 +247,33 @@ function getDialogAboutTemplate(pokemonIndex) {
 }
 
 function getDialogStatsTemplate(pokemonIndex) {
-  let pokemon = pokemonDetails[pokemonIndex];
-  let mainType = pokemon.types[0].type.name;
-  let mainColor = typeColors[mainType] || "#777";
-  let maxStatValue = getPokemonMaxStatValue(pokemon);
-  let statsTemplate = "";
-
-  for (let statIndex = 0; statIndex < pokemon.stats.length; statIndex++) {
-    let statName = formatPokemonStatName(pokemon.stats[statIndex].stat.name);
-    let statValue = pokemon.stats[statIndex].base_stat;
-    let statBarWidth = (statValue / maxStatValue) * 100;
-
-    statsTemplate += /*html*/ `
-      <div class="pokemon_stat_row">
-        <span class="pokemon_stat_name">${statName}</span>
-        <span class="pokemon_stat_value">${statValue}</span>
-
-        <div class="pokemon_stat_bar">
-          <div
-            class="pokemon_stat_bar_fill"
-            style="width: ${statBarWidth}%; background-color: ${mainColor};">
-          </div>
-        </div>
-      </div>
-    `;
-  }
+  const pokemon = pokemonDetails[pokemonIndex];
 
   return /*html*/ `
     <div class="pokemon_stats">
-      ${statsTemplate}
+      ${getPokemonStatsTemplate(pokemon)}
     </div>
   `;
 }
 
-function formatPokemonStatName(statName) {
-  if (statName === "hp") {
-    return "HP";
-  }
+function getPokemonStatRowTemplate(stat, maxStatValue, mainColor) {
+  const statName = formatPokemonStatName(stat.stat.name);
+  const statValue = stat.base_stat;
+  const statBarWidth = (statValue / maxStatValue) * 100;
 
-  if (statName === "special-attack") {
-    return "Sp. Atk";
-  }
+  return /*html*/ `
+    <div class="pokemon_stat_row">
+      <span class="pokemon_stat_name">${statName}</span>
+      <span class="pokemon_stat_value">${statValue}</span>
 
-  if (statName === "special-defense") {
-    return "Sp. Def";
-  }
-
-  return formatPokemonText(statName);
+      <div class="pokemon_stat_bar">
+        <div
+          class="pokemon_stat_bar_fill"
+          style="width: ${statBarWidth}%; background-color: ${mainColor};">
+        </div>
+      </div>
+    </div>
+  `;
 }
 
 function getDialogEvolutionTemplate(evolutionPaths) {
