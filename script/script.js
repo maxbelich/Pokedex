@@ -338,3 +338,17 @@ function getPokemonStatsTemplate(pokemon) {
 
   return statsTemplate;
 }
+
+/** Builds all type badge templates for one Pokémon. */
+function getPokemonTypeBadgesTemplate(pokemonTypes) {
+  let typesTemplate = "";
+
+  for (let typeIndex = 0; typeIndex < pokemonTypes.length; typeIndex++) {
+    const typeName = pokemonTypes[typeIndex].type.name;
+    const typeColor = typeColors[typeName] || "#777";
+
+    typesTemplate += getPokemonTypeTemplate(typeName, typeColor);
+  }
+
+  return typesTemplate;
+}

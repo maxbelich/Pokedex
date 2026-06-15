@@ -93,24 +93,15 @@ function getPokemonCardTemplate(pokemonIndex) {
 }
 
 function getPokemonTypesTemplate(pokemonIndex) {
-  let typesTemplate = "";
+  return getPokemonTypeBadgesTemplate(pokemonDetails[pokemonIndex].types);
+}
 
-  for (
-    let typeIndex = 0;
-    typeIndex < pokemonDetails[pokemonIndex].types.length;
-    typeIndex++
-  ) {
-    let typeName = pokemonDetails[pokemonIndex].types[typeIndex].type.name;
-    let typeColor = typeColors[typeName] || "#777";
-
-    typesTemplate += /*html*/ `
-      <span class="pokemon_type" style="background-color: ${typeColor}">
-        ${typeName}
-      </span>
-    `;
-  }
-
-  return typesTemplate;
+function getPokemonTypeTemplate(typeName, typeColor) {
+  return /*html*/ `
+    <span class="pokemon_type" style="background-color: ${typeColor}">
+      ${typeName}
+    </span>
+  `;
 }
 
 function getLoadingTemplate() {
@@ -277,16 +268,11 @@ function getPokemonStatRowTemplate(stat, maxStatValue, mainColor) {
 }
 
 function getDialogEvolutionTemplate(evolutionPaths) {
-  let evolutionTemplate = "";
-  let evolutionClass = getEvolutionLayoutClass(evolutionPaths);
-
-  for (let pathIndex = 0; pathIndex < evolutionPaths.length; pathIndex++) {
-    evolutionTemplate += getEvolutionPathTemplate(evolutionPaths[pathIndex]);
-  }
+  const evolutionClass = getEvolutionLayoutClass(evolutionPaths);
 
   return /*html*/ `
     <div class="pokemon_evolution ${evolutionClass}">
-      ${evolutionTemplate}
+      ${getEvolutionPathsTemplate(evolutionPaths)}
     </div>
   `;
 }
@@ -299,19 +285,7 @@ function getEvolutionLayoutClass(evolutionPaths) {
   return "pokemon_evolution_multiple_paths";
 }
 
-function getEvolutionPathTemplate(evolutionPath) {
-  let pathTemplate = "";
-
-  for (let stepIndex = 0; stepIndex < evolutionPath.length; stepIndex++) {
-    let evolutionStep = evolutionPath[stepIndex];
-
-    if (stepIndex > 0) {
-      pathTemplate += getEvolutionConditionTemplate(evolutionStep.condition);
-    }
-
-    pathTemplate += getEvolutionPokemonTemplate(evolutionStep);
-  }
-
+function getEvolutionPathContainerTemplate(pathTemplate) {
   return /*html*/ `
     <div class="evolution_path">
       ${pathTemplate}
