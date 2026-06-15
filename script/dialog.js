@@ -177,21 +177,41 @@ function updateActiveDialogTab(activeTabName) {
 }
 
 function showPreviousPokemon() {
-  let previousPokemonIndex = currentPokemonIndex - 1;
-
-  if (previousPokemonIndex < 0) {
-    previousPokemonIndex = pokemonDetails.length - 1;
-  }
+  const previousPokemonIndex = getVisiblePokemonNeighbor(-1);
 
   openPokemonDialog(previousPokemonIndex);
 }
 
 function showNextPokemon() {
-  let nextPokemonIndex = currentPokemonIndex + 1;
-
-  if (nextPokemonIndex >= pokemonDetails.length) {
-    nextPokemonIndex = 0;
-  }
+  const nextPokemonIndex = getVisiblePokemonNeighbor(1);
 
   openPokemonDialog(nextPokemonIndex);
+}
+
+function getVisiblePokemonNeighbor(direction) {
+  const currentVisibleIndex =
+    visiblePokemonIndexes.indexOf(currentPokemonIndex);
+
+  if (currentVisibleIndex === -1) return currentPokemonIndex;
+
+  const nextVisibleIndex = getWrappedVisiblePokemonIndex(
+    currentVisibleIndex,
+    direction,
+  );
+
+  return visiblePokemonIndexes[nextVisibleIndex];
+}
+
+function getWrappedVisiblePokemonIndex(currentVisibleIndex, direction) {
+  let nextVisibleIndex = currentVisibleIndex + direction;
+
+  if (nextVisibleIndex < 0) {
+    return visiblePokemonIndexes.length - 1;
+  }
+
+  if (nextVisibleIndex >= visiblePokemonIndexes.length) {
+    return 0;
+  }
+
+  return nextVisibleIndex;
 }

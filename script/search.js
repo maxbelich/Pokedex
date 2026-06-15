@@ -88,3 +88,10 @@ function hidePokemonSearchError() {
 
   searchErrorRef.classList.add("invisible");
 }
+
+function clearPokemonSearch() {
+  const searchInputRef = document.getElementById("pokemon_search_input");
+
+  searchInputRef.value = "";
+  hidePokemonSearchError();
+}
