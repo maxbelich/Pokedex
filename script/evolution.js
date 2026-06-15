@@ -221,3 +221,31 @@ function getTriggerConditionText(evolutionDetails) {
 
   return formatPokemonText(evolutionDetails.trigger.name);
 }
+
+/** Builds all evolution path templates for the dialog. */
+function getEvolutionPathsTemplate(evolutionPaths) {
+  let evolutionTemplate = "";
+
+  for (let pathIndex = 0; pathIndex < evolutionPaths.length; pathIndex++) {
+    evolutionTemplate += getEvolutionPathTemplate(evolutionPaths[pathIndex]);
+  }
+
+  return evolutionTemplate;
+}
+
+/** Builds one complete evolution path template. */
+function getEvolutionPathTemplate(evolutionPath) {
+  let pathTemplate = "";
+
+  for (let stepIndex = 0; stepIndex < evolutionPath.length; stepIndex++) {
+    const evolutionStep = evolutionPath[stepIndex];
+
+    if (stepIndex > 0) {
+      pathTemplate += getEvolutionConditionTemplate(evolutionStep.condition);
+    }
+
+    pathTemplate += getEvolutionPokemonTemplate(evolutionStep);
+  }
+
+  return getEvolutionPathContainerTemplate(pathTemplate);
+}
