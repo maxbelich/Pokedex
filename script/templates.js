@@ -49,7 +49,7 @@ function getMainTemplate() {
 
     <footer class="page_footer">
       <div class="page_container page_footer_content">
-        <p>Impressum</p>
+        <p><a href="./imprint.html">Imprint</a></p>
 
         <p>
           Data from
