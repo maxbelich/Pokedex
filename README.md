@@ -129,13 +129,13 @@ During this project I practiced:
 Clone the repository:
 
 ```bash
-git clone YOUR_REPOSITORY_LINK_HERE
+git clone git@github.com:maxbelich/Pokedex.git
 ```
 
 Open the project folder:
 
 ```bash
-cd YOUR_PROJECT_FOLDER
+cd Pokedex
 ```
 
 Open `index.html` in your browser.
