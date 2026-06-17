@@ -129,7 +129,7 @@ During this project I practiced:
 Clone the repository:
 
 ```bash
-git clone git@github.com:maxbelich/Pokedex.git
+git clone https://github.com/maxbelich/Pokedex.git
 ```
 
 Open the project folder:
