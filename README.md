@@ -7,7 +7,7 @@ The app uses the **PokéAPI** to load Pokémon data, display Pokémon cards, sea
 
 ## 🚀 Live Demo
 
-[View live demo]((https://pokedex.maxbelich.de/))
+[View live demo](https://pokedex.maxbelich.de/)
 
 ---
 
